@@ -2,3 +2,6 @@ venv
 *.pyc
 .DS_Store
 .env
+tweets.sqlite
+pythonDB.db
+historical.sqlite

@@ -223,4 +223,4 @@ class SListener(StreamListener):
                                 FROM(
                                     SELECT created_at, strftime('%s','now') - strftime('%s',created_at) AS time_passed
                                     FROM tweet
-                                    WHERE time_passed >= 600))""")
+                                    WHERE time_passed >= 60))""")
