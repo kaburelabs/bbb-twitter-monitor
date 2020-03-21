@@ -1,1 +1,1 @@
-worker: python streaming.py app:app.py
+web: gunicorn app:app.py
