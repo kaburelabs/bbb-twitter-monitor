@@ -29,8 +29,6 @@ app.title = app_name
 # server instance to run map when deploying
 server = app.server
 
-server.secret_key = os.environ.get('SECRET_KEY', 'my-secret-key')
-
 # Since I am adding callbacks to elements that don’t ~
 # exist in the app.layout as they are spread throughout files
 app.config.suppress_callback_exceptions = True
