@@ -4,6 +4,7 @@ import json
 import pandas as pd
 from sqlalchemy import create_engine
 from datetime import timedelta
+import os
 
 # inherit from StreamListener class
 class SListener(StreamListener):
@@ -14,8 +15,7 @@ class SListener(StreamListener):
         self.cnt = 0
         # create a engine to the database
         # self.engine = create_engine('sqlite:///tweets.sqlite')
-        self.engine = create_engine('postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji')
-        
+        self.engine = create_engine(os.environ['DATABASE_URL'])
 
     # for each tweet streamed
     def on_status(self, status): 

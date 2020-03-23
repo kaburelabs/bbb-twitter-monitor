@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
 from slistener import SListener
+import os
 # from key_secret import consumer_key, consumer_secret
 # from key_secret import access_token, access_token_secret
 
@@ -28,10 +29,10 @@ stream = Stream(auth, listen)
 # set up words to hear
 keywords_to_hear = ['#BBB20', "#BBB2020"]
 
-# create a engine to the database
-engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
-#engine = create_engine("sqlite:///tweets.sqlite")
 
+# create a engine to the database
+engine = create_engine(os.environ['DATABASE_URL'])
+#engine = create_engine("sqlite:///tweets.sqlite")
 
 # if the database does not exist
 if not database_exists(engine.url):
