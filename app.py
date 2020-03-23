@@ -9,9 +9,12 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
 import plotly_express as px
+import os
+import psycopg2
 
+DATABASE_URL = os.environ['DATABASE_URL']
 
-con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app_name = "Trich Twitter Dashboard"
 
@@ -21,6 +24,7 @@ external_stylesheets = ['https://codepen.io/kaburelabs/pen/xxGRXWa.css',
                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
                         'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
 
+
 ## Defining the instance of dash
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -28,6 +32,11 @@ app.title = app_name
 
 # server instance to run map when deploying
 server = app.server
+
+app.config['SDATABASE_URI'] = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
+db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
 
 # Since I am adding callbacks to elements that don’t ~
 # exist in the app.layout as they are spread throughout files
