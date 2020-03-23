@@ -12,14 +12,13 @@ import plotly_express as px
 import os
 import psycopg2
 
-#con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
+con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
 #con = sqlite3.connect("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", check_same_thread=False)
 
 
 
-DATABASE_URL = os.environ['DATABASE_URL']
-
-con = psycopg2.connect(DATABASE_URL, sslmode='require')
+# DATABASE_URL = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
+# con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app_name = "Trich Twitter Dashboard"
 
@@ -42,12 +41,12 @@ server = app.server
 # exist in the app.layout as they are spread throughout files
 app.config.suppress_callback_exceptions = True
 
-# create a engine to the database
-engine = create_engine("sqlite:///historical.sqlite")
-# if the database does not exist
-if not database_exists(engine.url):
-    # create a new database
-    create_database(engine.url)
+# # create a engine to the database
+# engine = create_engine("sqlite:///historical.sqlite")
+# # if the database does not exist
+# if not database_exists(engine.url):
+#     # create a new database
+#     create_database(engine.url)
 
 
 def create_header(some_string):
@@ -286,7 +285,7 @@ app.layout = html.Div([
                                             fixed_columns={'headers': True, 'data': 0},
                                             #style_as_list_view=True,
                                             fixed_rows={'headers': True, 'data': 0},     
-                                            style_table={'maxHeight':'425px', 'maxWidth':'550px'},      
+                                            style_table={'maxHeight':'425px'},      
                                             style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
                                             style_cell={"width":"42px"},
                                             style_data_conditional=[
@@ -300,8 +299,8 @@ app.layout = html.Div([
                                                                               'maxWidth': '350px',
                                                                               'whiteSpace': 'normal', 'minHeight':'15px'},
 
-                                                {'if': {'column_id': "# RT's"}, 'width': '45px'},
-                                                {'if': {'column_id': "count"}, 'width': '45px'}
+                                                {'if': {'column_id': "# RT's"}, 'width': '20px'},
+                                                {'if': {'column_id': "count"}, 'width': '20px'}
                                             ]
                         )
                     ], className='six columns')
@@ -570,9 +569,9 @@ def _update_div1(df):
     df_ = pd.read_json(df, orient='split')
 
     df_.created_at = pd.to_datetime(df_.created_at)
-    df_.set_index('created_at', inplace=True)
+    df_.set_index('created_at', inplace=True)   
 
-    hist_vals = hist_vals.append(df_.resample('5min').count()['index'].sort_index(ascending=False).reset_index()[1:-1].to_dict('row'))
+    hist_vals = hist_vals.append(df_.resample('1min').count()['index'].sort_index(ascending=False).reset_index()[1:-1].to_dict('row'))
     hist_vals = hist_vals.reset_index().drop('level_0', axis=1)
     hist_vals = hist_vals.sort_values('created_at', ascending=False).drop_duplicates('created_at', keep='last')
 
