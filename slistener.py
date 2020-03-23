@@ -13,8 +13,9 @@ class SListener(StreamListener):
         # instantiate a counter
         self.cnt = 0
         # create a engine to the database
-        self.engine = create_engine('sqlite:///tweets.sqlite')
-
+        # self.engine = create_engine('sqlite:///tweets.sqlite')
+        self.engine = create_engine('postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji')
+        
 
     # for each tweet streamed
     def on_status(self, status): 
@@ -195,7 +196,8 @@ class SListener(StreamListener):
         #     pass
 
         # uncomment the following to display tweets in the console
-        print("Writing tweet # {} to the database".format(self.cnt))
+        if self.cnt % 1000 == 0:
+            print("Writing tweet # {} to the database".format(self.cnt))
         # print("Tweet Created at: {}".format(tweet['created_at']))
         # print(tweet)
         #f
@@ -220,4 +222,4 @@ class SListener(StreamListener):
                                 FROM(
                                     SELECT created_at, strftime('%s','now') - strftime('%s',created_at) AS time_passed
                                     FROM tweet
-                                    WHERE time_passed >= 60))""")
+                                    WHERE time_passed >= 360))""")

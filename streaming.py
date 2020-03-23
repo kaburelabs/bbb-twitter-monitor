@@ -29,11 +29,15 @@ stream = Stream(auth, listen)
 keywords_to_hear = ['#BBB20', "#BBB2020"]
 
 # create a engine to the database
-engine = create_engine("sqlite:///tweets.sqlite")
+engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
+#engine = create_engine("sqlite:///tweets.sqlite")
+
+
 # if the database does not exist
 if not database_exists(engine.url):
     # create a new database
     create_database(engine.url)
+    
 # begin collecting data
 while True:
     # maintian connection unless interrupted

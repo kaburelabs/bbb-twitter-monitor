@@ -9,12 +9,9 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
 import plotly_express as px
-import os
-import psycopg2
 
-DATABASE_URL = os.environ['DATABASE_URL']
-
-con = psycopg2.connect(DATABASE_URL, sslmode='require')
+#con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
+con = sqlite3.connect("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", check_same_thread=False)
 
 app_name = "Trich Twitter Dashboard"
 
@@ -36,6 +33,13 @@ server = app.server
 # Since I am adding callbacks to elements that don’t ~
 # exist in the app.layout as they are spread throughout files
 app.config.suppress_callback_exceptions = True
+
+# create a engine to the database
+engine = create_engine("sqlite:///historical.sqlite")
+# if the database does not exist
+if not database_exists(engine.url):
+    # create a new database
+    create_database(engine.url)
 
 
 def create_header(some_string):
@@ -247,9 +251,9 @@ app.layout = html.Div([
                                         fixed_columns={'headers': True, 'data': 0},
                                         #style_as_list_view=True,
                                         fixed_rows={'headers': True, 'data': 0},  
-                                        style_table={'maxHeight':'425px'}, 
+                                        style_table={'maxHeight':'425px', 'maxWidth':'550px'}, 
                                         style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-                                        style_cell={"minWidth":"20px"},
+                                        style_cell={"minWidth":"42px"},
                                         style_data_conditional=[
                                                     {
                                                     'if': {'row_index': 'odd'},
@@ -259,13 +263,13 @@ app.layout = html.Div([
                                         style_cell_conditional=[
                                             {'if': {'column_id': 'text'}, 'textAlign':'left',
                                                                           'width': '350px',
-                                                                          'whiteSpace': 'normal', 'minHeight':'70px'},
+                                                                          'whiteSpace': 'normal', 'minHeight':'15px'},
 
                                             {'if': {'column_id': "# RT's"}, 'width': '30px'},
                                             {'if': {'column_id': "count"}, 'width': '30px'}
                                         ], 
                     )
-                ], className='six columns', style={'allign':'left'}),
+                ], className='six columns'),
 
         html.Div([#html.P('TOP 20 MOST RELEVANT RETWEETS ', style={'padding':'.5rem', 'textAlign':'center'}), 
                     dash_table.DataTable(id='recommender-table2', 
@@ -274,19 +278,25 @@ app.layout = html.Div([
                                             fixed_columns={'headers': True, 'data': 0},
                                             #style_as_list_view=True,
                                             fixed_rows={'headers': True, 'data': 0},     
-                                            style_table={'maxHeight':'425px'},      
+                                            style_table={'maxHeight':'425px', 'maxWidth':'550px'},      
                                             style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-                                            style_cell={"width":"20px"},
+                                            style_cell={"width":"42px"},
+                                            style_data_conditional=[
+                                                            {
+                                                            'if': {'row_index': 'odd'},
+                                                            'backgroundColor': 'rgb(248, 248, 248)'
+                                                            }
+                                                ],  
                                             style_cell_conditional=[
                                                 {'if': {'column_id': 'text'}, 'textAlign':'left',
-                                                                            'width': '350px',
-                                                                            'whiteSpace': 'normal', 'minHeight':'70px'},
+                                                                              'maxWidth': '350px',
+                                                                              'whiteSpace': 'normal', 'minHeight':'15px'},
 
-                                                {'if': {'column_id': "# RT's"}, 'width': '30px'},
-                                                {'if': {'column_id': "count"}, 'width': '30px'}
+                                                {'if': {'column_id': "# RT's"}, 'width': '45px'},
+                                                {'if': {'column_id': "count"}, 'width': '45px'}
                                             ]
                         )
-                    ], className='six columns', style={'allign':'left'})
+                    ], className='six columns')
             ], className='row', style={'height':'500px'}),
 
     html.Div([
@@ -672,7 +682,7 @@ def _update_tfidf(data, val2):
                                             'maos', 'problema', 'ruim', 'dai', 'pegou', 'barata', 'achou', 'virus', 'nossa',
                                             'senhora', 'anos', 'vezes', 'asno', 'mil','sou', 'medico', 'cobraram', 'prefiro', 
                                             'morrer', 'favelado', 'machuca', 'entao', 'fosse', 'qualquer', 'sai', 'horas', 
-                                            'tenho', 'merito', 
+                                            'tenho', 'merito', 'tanta', 'futebol', 'fechar', 'nocao', 'olhos', 'diante', 'videos', 
 
                                             ], max_features=25,
                              )
