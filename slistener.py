@@ -94,9 +94,9 @@ class SListener(StreamListener):
             # print('Quoted: ', status_data['quoted_status'])
             #print('quoted: ',status_data['quoted_status']['favorite_count'])
             #print(status_data)
-        print("#####")
-        print(full_text_list)
-        print("#####")
+        # print("#####")
+        # print(full_text_list)
+        # print("#####")
         # only retain the longest candidate
         full_text = max(full_text_list, key=len)
 
@@ -108,7 +108,7 @@ class SListener(StreamListener):
             retweet_reply = status_data['retweeted_status']['reply_count'] 
             orig_post_user_ret = status_data['retweeted_status']['user']['screen_name']
             retweet_id = status_data['retweeted_status']['id_str']
-            print("RT sem retweet", status_data)
+            #print("RT sem retweet", status_data)
    
         # if (orig_post_user_ret == None) and (orig_post_user == None):
         #     print(orig_post_user_ret, orig_post_user)
