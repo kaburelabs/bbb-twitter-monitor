@@ -14,6 +14,7 @@ key_secret = 'VR1k0nyst8MzNdbAaNdjrVb1XpoRXZPn0JtBcrUv96KDxxeLeR'
 access_token = '832282389598576640-4Asg7n5UNmHPSDEfdn1FGvrmvkYx2gD'
 token_secret = 'vrSZ3yiraNCrfOFJ2kkWlG13WjECS0cqFL6690k05GXg3'
 
+
 # consumer key authentication
 auth = OAuthHandler(api_key, key_secret)
 # access key authentication
