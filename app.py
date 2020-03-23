@@ -14,7 +14,7 @@ import psycopg2
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app_name = "Trich Twitter Dashboard"
 
@@ -33,21 +33,9 @@ app.title = app_name
 # server instance to run map when deploying
 server = app.server
 
-app.config['SDATABASE_URI'] = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
-db = SQLAlchemy(app)
-
-migrate = Migrate(app, db)
-
 # Since I am adding callbacks to elements that don’t ~
 # exist in the app.layout as they are spread throughout files
 app.config.suppress_callback_exceptions = True
-
-# create a engine to the database
-engine = create_engine("sqlite:///historical.sqlite")
-# if the database does not exist
-if not database_exists(engine.url):
-    # create a new database
-    create_database(engine.url)
 
 
 def create_header(some_string):
