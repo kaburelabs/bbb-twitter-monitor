@@ -19,7 +19,7 @@ user_heroku = "papziqledxhges"
 pw_heroku = "d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa"
 
 DATABASE_URL = os.environ['DATABASE_URL']
-print(DATABASE_URL)
+
 
 # con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
 con = psycopg2.connect(host='ec2-52-87-58-157.compute-1.amazonaws.com', dbname='db9vikoson7vl3', 
@@ -430,6 +430,8 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 @app.callback(Output('df-sharing', 'children'),
               [Input('graph-update', 'n_intervals')])
 def _update_div1(val_1):
+    print(con)
+    print(DATABASE_URL)
     df = pd.read_sql_query("SELECT * from tweet", con)
     return df.to_json(date_format='iso', orient='split')
 
