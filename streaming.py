@@ -32,7 +32,7 @@ keywords_to_hear = ['#BBB20', "#BBB2020"]
 DATABASE_URL = os.environ['DATABASE_URL']
 
 # create a engine to the database
-engine = create_engine("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/db9vikoson7vl3")
+engine = create_engine("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/tweets")
 # engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
 
 # if the database does not exist
