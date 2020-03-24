@@ -5,6 +5,14 @@ import pandas as pd
 from sqlalchemy import create_engine
 from datetime import timedelta
 import os
+from sqlalchemy import text
+import datetime
+from sqlalchemy import text
+
+PGHOST="ec2-3-91-112-166.compute-1.amazonaws.com"
+PGDATABASE="d20nasndbdf4ji"
+PGUSER="wcfuxixmvpozqs"
+PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
 # inherit from StreamListener class
 class SListener(StreamListener):
@@ -14,8 +22,8 @@ class SListener(StreamListener):
         # instantiate a counter
         self.cnt = 0
         # create a engine to the database
-        self.engine = create_engine('sqlite:///tweets.sqlite')
-        # self.engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", echo=True)
+        #self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
+        self.engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
 
     # for each tweet streamed
     def on_status(self, status): 
@@ -196,7 +204,7 @@ class SListener(StreamListener):
         #     pass
 
         # uncomment the following to display tweets in the console
-        if self.cnt % 1000 == 0:
+        if self.cnt % 500 == 0:
             print("Writing tweet # {} to the database".format(self.cnt))
         # print("Tweet Created at: {}".format(tweet['created_at']))
         # print(tweet)
@@ -214,12 +222,21 @@ class SListener(StreamListener):
         # push tweet into database
         df.to_sql('tweet', con=self.engine, if_exists='append')
 
-        with self.engine.connect() as con:
-            con.execute("""
-                        DELETE FROM tweet
-                        WHERE created_at IN(
+        task = """
+                DELETE FROM tweet
+                WHERE created_at IN(
+                    SELECT created_at
+                        FROM(
                             SELECT created_at
-                                FROM(
-                                    SELECT created_at, strftime('%s','now') - strftime('%s',created_at) AS time_passed
-                                    FROM tweet
-                                    WHERE time_passed >= 360))""")
+                            FROM tweet
+                            WHERE ((DATE_PART('day', now()::timestamp - created_at::timestamp) * 24 
+                                                + DATE_PART('hour', now()::timestamp - created_at::timestamp)) * 60 
+                                                + DATE_PART('minute', now()::timestamp - created_at::timestamp)) * 60 
+                                                + DATE_PART('second', now()::timestamp - created_at::timestamp) > 360) AS tweet_del) """
+        
+
+        # d = addresses_table.delete().where(addresses_table.c.retired == 1)
+        # d.execute()
+        with self.engine.connect() as con:
+            # con.execute(task)
+            con.execute(text(task))

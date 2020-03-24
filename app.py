@@ -12,13 +12,13 @@ import plotly_express as px
 import os
 import psycopg2
 
-con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
+# con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
+#  con = psycopg2.connect("host=localhost dbname=tweets user=postgres password=admin")
+
 #con = sqlite3.connect("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", check_same_thread=False)
 
-
-
-# DATABASE_URL = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
-# con = psycopg2.connect(DATABASE_URL, sslmode='require')
+DATABASE_URL = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
+con = psycopg2.connect(DATABASE_URL)
 
 app_name = "Trich Twitter Dashboard"
 
@@ -258,7 +258,7 @@ app.layout = html.Div([
                                         fixed_columns={'headers': True, 'data': 0},
                                         #style_as_list_view=True,
                                         fixed_rows={'headers': True, 'data': 0},  
-                                        style_table={'maxHeight':'425px', 'maxWidth':'550px'}, 
+                                        style_table={'maxHeight':'425px'}, 
                                         style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
                                         style_cell={"minWidth":"42px"},
                                         style_data_conditional=[
@@ -272,38 +272,38 @@ app.layout = html.Div([
                                                                           'width': '350px',
                                                                           'whiteSpace': 'normal', 'minHeight':'15px'},
 
-                                            {'if': {'column_id': "# RT's"}, 'width': '30px'},
-                                            {'if': {'column_id': "count"}, 'width': '30px'}
+                                            {'if': {'column_id': "# RT's"}, 'width': '20px'},
+                                            {'if': {'column_id': "count"}, 'width': '20px'}
                                         ], 
                     )
                 ], className='six columns'),
 
-        html.Div([#html.P('TOP 20 MOST RELEVANT RETWEETS ', style={'padding':'.5rem', 'textAlign':'center'}), 
+        html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
                     dash_table.DataTable(id='recommender-table2', 
-                                            columns=[{'name':i, 'id':i} for i in ["# RT's", 'text', 'count']],
-                                            #page_size=5, 
-                                            fixed_columns={'headers': True, 'data': 0},
-                                            #style_as_list_view=True,
-                                            fixed_rows={'headers': True, 'data': 0},     
-                                            style_table={'maxHeight':'425px'},      
-                                            style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-                                            style_cell={"width":"42px"},
-                                            style_data_conditional=[
-                                                            {
-                                                            'if': {'row_index': 'odd'},
-                                                            'backgroundColor': 'rgb(248, 248, 248)'
-                                                            }
-                                                ],  
-                                            style_cell_conditional=[
-                                                {'if': {'column_id': 'text'}, 'textAlign':'left',
-                                                                              'maxWidth': '350px',
-                                                                              'whiteSpace': 'normal', 'minHeight':'15px'},
+                                        columns=[{'name':i, 'id':i} for i in ["# RT's", 'text', 'count']],
+                                        #page_size=5, 
+                                        fixed_columns={'headers': True, 'data': 0},
+                                        #style_as_list_view=True,
+                                        fixed_rows={'headers': True, 'data': 0},  
+                                        style_table={'maxHeight':'425px'}, 
+                                        style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
+                                        style_cell={"minWidth":"42px"},
+                                        style_data_conditional=[
+                                                    {
+                                                    'if': {'row_index': 'odd'},
+                                                    'backgroundColor': 'rgb(248, 248, 248)'
+                                                     }
+                                        ],       
+                                        style_cell_conditional=[
+                                            {'if': {'column_id': 'text'}, 'textAlign':'left',
+                                                                          'width': '350px',
+                                                                          'whiteSpace': 'normal', 'minHeight':'15px'},
 
-                                                {'if': {'column_id': "# RT's"}, 'width': '20px'},
-                                                {'if': {'column_id': "count"}, 'width': '20px'}
-                                            ]
-                        )
-                    ], className='six columns')
+                                            {'if': {'column_id': "# RT's"}, 'width': '20px'},
+                                            {'if': {'column_id': "count"}, 'width': '20px'}
+                                        ], 
+                    )
+                ], className='six columns'),
             ], className='row', style={'height':'500px'}),
 
     html.Div([
@@ -529,10 +529,10 @@ def _update_div1(df):
     df_ = pd.read_json(df, orient='split')
     #df = pd.read_sql_query("SELECT text from tweet", con)
     df_['count'] = df_.groupby(["text"])["created_at"].transform("count")
-    df_princ = df_.drop_duplicates('text', keep='last').sort_values('count', ascending=False)[['text', 'count', 'retweet_shares']][:40].rename(columns={'retweet_shares':"# RT's"})
-    df_princ1 = df_.drop_duplicates('text', keep='last').sort_values('retweet_shares', ascending=False)[['text', 'retweet_shares', 'count']].rename(columns={'retweet_shares':"# RT's"})
+    df_princ = df_.drop_duplicates('text', keep='last').sort_values('count', ascending=False)[['count', 'text', 'retweet_shares']].rename(columns={'retweet_shares':"# RT's"})
+    df_princ1 = df_.drop_duplicates('text', keep='last').sort_values('retweet_shares', ascending=False)[['retweet_shares', 'text', 'count']].rename(columns={'retweet_shares':"# RT's"})
 
-    return [df_princ.to_dict('rows'), df_princ1[(df_princ1['count'] >= 15) & (df_princ1["# RT's"])][:40].to_dict('rows')]
+    return [df_princ[:40].to_dict('rows'), df_princ1[(df_princ1['count'] >= 15) & (df_princ1["# RT's"])][:40].to_dict('rows')]
     
 
 def creating_hist():
@@ -678,7 +678,7 @@ def _update_tfidf(data, val2):
                                             'momento', 'algum', 'favorito', 'momento', 'fui', 'estao', 'bom', 
                                             'sendo', 'todos', 'diz', 'alguma', 'mulheres', 'todos', 'cardapio', 
                                             'meninas', 'machista', 'cabelo', 'teve', 'caralho', 'assunto', 'vcs',
-                                            'viado', 'eliminar', 'acha', 'cozinha', 'ia', 'apoio', 
+                                            'viado', 'eliminar', 'acha', 'cozinha', 'ia', 'apoio', 'tombo', 
                                             'queen', 'tocando', 'musicas', 'dancando', 'playlist', 'magica', 
                                             'linda', 'toda', 'acho', 'escolheu', 'historia', 'conversa', 'passar',
                                             'estava', 'mao', 'horarios', 'kkkk', 'kkk', 'pau', 'cu', 'buceta',
@@ -690,7 +690,7 @@ def _update_tfidf(data, val2):
                                             'senhora', 'anos', 'vezes', 'asno', 'mil','sou', 'medico', 'cobraram', 'prefiro', 
                                             'morrer', 'favelado', 'machuca', 'entao', 'fosse', 'qualquer', 'sai', 'horas', 
                                             'tenho', 'merito', 'tanta', 'futebol', 'fechar', 'nocao', 'olhos', 'diante', 'videos', 
-
+                                            'incrivel', 'ansiosos', 'forca', 'parabens'
                                             ], max_features=25,
                              )
 
