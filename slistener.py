@@ -27,7 +27,7 @@ class SListener(StreamListener):
         self.cnt = 0
         # create a engine to the database
         #self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
-        self.engine = create_engine("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/tweets")
+        self.engine = create_engine("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
 
     # for each tweet streamed
     def on_status(self, status): 
