@@ -16,7 +16,7 @@ PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
 
 DATABASE_URL = os.environ['DATABASE_URL']
-
+print(DATABASE_URL)
 
 # inherit from StreamListener class
 class SListener(StreamListener):

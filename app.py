@@ -12,6 +12,12 @@ import plotly_express as px
 import os
 import psycopg2
 
+
+host_heroku = "ec2-52-87-58-157.compute-1.amazonaws.com"
+database_heroku = "db9vikoson7vl3"
+user_heroku = "papziqledxhges"
+pw_heroku = "d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa"
+
 # con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
 con = psycopg2.connect(host='ec2-52-87-58-157.compute-1.amazonaws.com', dbname='db9vikoson7vl3', 
                        user='papziqledxhges', password='d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa')
