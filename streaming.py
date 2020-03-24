@@ -29,9 +29,10 @@ stream = Stream(auth, listen)
 # set up words to hear
 keywords_to_hear = ['#BBB20', "#BBB2020"]
 
+DATABASE_URL = os.environ['DATABASE_URL']
 
 # create a engine to the database
-engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
+engine = create_engine(DATABASE_URL)
 # engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
 
 # if the database does not exist

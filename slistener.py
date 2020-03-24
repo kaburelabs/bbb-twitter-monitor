@@ -14,6 +14,10 @@ PGDATABASE="d20nasndbdf4ji"
 PGUSER="wcfuxixmvpozqs"
 PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+
 # inherit from StreamListener class
 class SListener(StreamListener):
     # initialize the API and a counter for the number of tweets collected
@@ -23,7 +27,7 @@ class SListener(StreamListener):
         self.cnt = 0
         # create a engine to the database
         #self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
-        self.engine = create_engine("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji")
+        self.engine = create_engine(DATABASE_URL)
 
     # for each tweet streamed
     def on_status(self, status): 

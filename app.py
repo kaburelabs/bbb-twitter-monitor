@@ -17,8 +17,9 @@ import psycopg2
 
 #con = sqlite3.connect("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", check_same_thread=False)
 
-DATABASE_URL = "postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji"
-con = psycopg2.connect(DATABASE_URL)
+DATABASE_URL = os.environ['DATABASE_URL']
+
+con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app_name = "Trich Twitter Dashboard"
 
