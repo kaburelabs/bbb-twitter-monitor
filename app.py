@@ -19,7 +19,7 @@ import psycopg2
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-con = psycopg2.connect(DATABASE_URL, sslmode='require')
+con = psycopg2.connect("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/db9vikoson7vl3", sslmode='require')
 
 app_name = "Trich Twitter Dashboard"
 
