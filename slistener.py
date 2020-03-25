@@ -26,8 +26,11 @@ class SListener(StreamListener):
         # instantiate a counter
         self.cnt = 0
         # create a engine to the database
-        #self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
-        self.engine = create_engine(DATABASE_URL)
+        if os.environ['DATABASE_URL']:
+            self.engine = create_engine(os.environ['DATABASE_URL'])
+        else:
+            self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
+
     # for each tweet streamed
     def on_status(self, status): 
         # increment the counter

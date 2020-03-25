@@ -18,11 +18,14 @@ database_heroku = "db9vikoson7vl3"
 user_heroku = "papziqledxhges"
 pw_heroku = "d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa"
 
-# DATABASE_URL = os.environ['DATABASE_URL']
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
-con = psycopg2.connect(host='ec2-52-87-58-157.compute-1.amazonaws.com', dbname='db9vikoson7vl3', 
-                       user='papziqledxhges', password='d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa', sslmode='require')
+# con = psycopg2.connect(host='ec2-52-87-58-157.compute-1.amazonaws.com', dbname='db9vikoson7vl3', 
+#                        user='papziqledxhges', password='d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa', sslmode='require')
 
 #con = sqlite3.connect("postgres://wcfuxixmvpozqs:14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a@ec2-3-91-112-166.compute-1.amazonaws.com:5432/d20nasndbdf4ji", check_same_thread=False)
 
