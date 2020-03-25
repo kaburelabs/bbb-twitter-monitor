@@ -16,7 +16,6 @@ PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
 
 DATABASE_URL = os.environ['DATABASE_URL']
-print(DATABASE_URL)
 
 # inherit from StreamListener class
 class SListener(StreamListener):
@@ -26,10 +25,8 @@ class SListener(StreamListener):
         # instantiate a counter
         self.cnt = 0
         # create a engine to the database
-        if os.environ['DATABASE_URL']:
-            self.engine = create_engine(os.environ['DATABASE_URL'])
-        else:
-            self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
+
+        self.engine = create_engine(os.environ['DATABASE_URL'])
 
     # for each tweet streamed
     def on_status(self, status): 
