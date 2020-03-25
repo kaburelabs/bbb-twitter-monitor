@@ -21,7 +21,7 @@ pw_heroku = "d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa"
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-con = psycopg2.connect(DATABASE_URL)
+con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # con = sqlite3.connect("tweets.sqlite", check_same_thread=False)
 # con = psycopg2.connect(host='ec2-52-87-58-157.compute-1.amazonaws.com', dbname='db9vikoson7vl3', 
