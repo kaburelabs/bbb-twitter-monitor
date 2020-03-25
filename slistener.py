@@ -27,7 +27,7 @@ class SListener(StreamListener):
         self.cnt = 0
         # create a engine to the database
         #self.engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
-        self.engine = create_engine("postgres://papziqledxhges:d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa@ec2-52-87-58-157.compute-1.amazonaws.com:5432/db9vikoson7vl3")
+        self.engine = create_engine(DATABASE_URL)
     # for each tweet streamed
     def on_status(self, status): 
         # increment the counter
@@ -223,8 +223,8 @@ class SListener(StreamListener):
         df['created_at'] = pd.to_datetime(df.created_at) 
      
         # push tweet into database
-        df.to_sql('tweet', con=self.engine, if_exists='append')
-
+        df.to_sql('tweet', con=self.engine, if_exists='append', index=False)
+        
         task = """
                 DELETE FROM tweet
                 WHERE created_at IN(
