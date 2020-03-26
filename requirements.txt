@@ -28,6 +28,7 @@ psycopg2-binary==2.8.4
 pyorbital==1.5.0
 PySocks==1.7.1
 python-dateutil==2.8.1
+python-decouple==3.3
 pytz==2019.3
 requests==2.23.0
 requests-oauthlib==1.3.0

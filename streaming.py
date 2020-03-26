@@ -6,14 +6,23 @@ from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
 from slistener import SListener
 import os
+from decouple import config
 # from key_secret import consumer_key, consumer_secret
 # from key_secret import access_token, access_token_secret
+
+
+## library decouple
+
 
 api_key = 'dHdgnBwOWMZOF07zH5u4pR1NJ'
 key_secret = 'VR1k0nyst8MzNdbAaNdjrVb1XpoRXZPn0JtBcrUv96KDxxeLeR'
 
 access_token = '832282389598576640-4Asg7n5UNmHPSDEfdn1FGvrmvkYx2gD'
 token_secret = 'vrSZ3yiraNCrfOFJ2kkWlG13WjECS0cqFL6690k05GXg3'
+
+
+
+api_key = config('DEVELOPER')
 
 
 # consumer key authentication
@@ -33,11 +42,14 @@ keywords_to_hear = ['#BBB20', "#BBB2020"]
 engine = create_engine(os.environ['DATABASE_URL'])
 # engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
 
-# if the database does not exist
-if not database_exists(engine.url):
-    # create a new database
-    create_database(engine.url)
-    
+DEVELOPER = config('DEVELOPER', default=False, cast=bool)
+
+if DEVELOPER:
+    # if the database does not exist
+    if not database_exists(engine.url):
+        # create a new database
+        create_database(engine.url)
+
 # begin collecting data
 while True:
     # maintian connection unless interrupted

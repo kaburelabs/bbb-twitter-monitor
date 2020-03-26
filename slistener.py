@@ -14,7 +14,6 @@ PGDATABASE="d20nasndbdf4ji"
 PGUSER="wcfuxixmvpozqs"
 PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
-
 DATABASE_URL = os.environ['DATABASE_URL']
 
 # inherit from StreamListener class
@@ -223,7 +222,7 @@ class SListener(StreamListener):
         df['created_at'] = pd.to_datetime(df.created_at) 
      
         # push tweet into database
-        df.to_sql('tweet', con=self.engine, if_exists='append', index=False)
+        df.to_sql('tweet3', con=self.engine, if_exists='append', index=False)
         
         task = """
                 DELETE FROM tweet
