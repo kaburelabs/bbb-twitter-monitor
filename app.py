@@ -11,13 +11,9 @@ from urllib3.exceptions import ProtocolError
 import plotly_express as px
 import os
 import psycopg2
+from decouple import config
 
-host_heroku = "ec2-52-87-58-157.compute-1.amazonaws.com"
-database_heroku = "db9vikoson7vl3"
-user_heroku = "papziqledxhges"
-pw_heroku = "d01557fd8b4058737ac11fad6c99aac0ba6e12dc7cff3eb518f76efeb0e6cefa"
-
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = config('DATABASE_URL')
 
 con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
@@ -431,7 +427,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 @app.callback(Output('df-sharing', 'children'),
               [Input('graph-update', 'n_intervals')])
 def _update_div1(val_1):
-    print(con)
+    # print(con)
     # print(DATABASE_URL)
     df = pd.read_sql_query("SELECT * from tweet", con)
     return df.to_json(date_format='iso', orient='split')
@@ -441,6 +437,7 @@ def _update_div1(val_1):
 def _update_div1(df):
     df_ = pd.read_json(df, orient='split')
     df_.created_at = pd.to_datetime(df_.created_at)
+    print(df_)
     total_tweets, unique_texts, unique_texts_perc, unique_users, \
         top_20_posts, top_20_posts_perc, zero_retweets, zero_retweets_perc, time_inf = calc_tweet_metrics(df_)
     #df = df.sort_values('created_at')

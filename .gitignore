@@ -4,3 +4,4 @@ venv
 .env
 pythonDB.db
 historical.sqlite
+.env

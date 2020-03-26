@@ -8,13 +8,15 @@ import os
 from sqlalchemy import text
 import datetime
 from sqlalchemy import text
+from decouple import config
+
 
 PGHOST="ec2-3-91-112-166.compute-1.amazonaws.com"
 PGDATABASE="d20nasndbdf4ji"
 PGUSER="wcfuxixmvpozqs"
 PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
 
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = config('DATABASE_URL')
 
 # inherit from StreamListener class
 class SListener(StreamListener):
@@ -25,7 +27,7 @@ class SListener(StreamListener):
         self.cnt = 0
         # create a engine to the database
 
-        self.engine = create_engine(os.environ['DATABASE_URL'])
+        self.engine = create_engine(config('DATABASE_URL'))
 
     # for each tweet streamed
     def on_status(self, status): 

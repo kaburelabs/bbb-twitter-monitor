@@ -21,10 +21,6 @@ access_token = '832282389598576640-4Asg7n5UNmHPSDEfdn1FGvrmvkYx2gD'
 token_secret = 'vrSZ3yiraNCrfOFJ2kkWlG13WjECS0cqFL6690k05GXg3'
 
 
-
-api_key = config('DEVELOPER')
-
-
 # consumer key authentication
 auth = OAuthHandler(api_key, key_secret)
 # access key authentication
@@ -39,7 +35,7 @@ stream = Stream(auth, listen)
 keywords_to_hear = ['#BBB20', "#BBB2020"]
 
 # create a engine to the database
-engine = create_engine(os.environ['DATABASE_URL'])
+engine = create_engine(config('DATABASE_URL'))
 # engine = create_engine('postgresql://postgres:admin@localhost:5432/tweets')
 
 DEVELOPER = config('DEVELOPER', default=False, cast=bool)
@@ -49,6 +45,8 @@ if DEVELOPER:
     if not database_exists(engine.url):
         # create a new database
         create_database(engine.url)
+
+create_database(engine.url)
 
 # begin collecting data
 while True:
