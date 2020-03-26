@@ -224,7 +224,7 @@ class SListener(StreamListener):
         df['created_at'] = pd.to_datetime(df.created_at) 
         print(df)
         # push tweet into database
-        df.to_sql('tweet3', con=self.engine, if_exists='append', index=False)
+        df.to_sql('tweet', con=self.engine, if_exists='append', index=False)
         
         task = """
                 DELETE FROM tweet
