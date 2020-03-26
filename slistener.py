@@ -208,7 +208,7 @@ class SListener(StreamListener):
         #     pass
 
         # uncomment the following to display tweets in the console
-        if self.cnt % 500 == 0:
+        if self.cnt % 2 == 0:
             print("Writing tweet # {} to the database".format(self.cnt))
         # print("Tweet Created at: {}".format(tweet['created_at']))
         # print(tweet)
@@ -222,7 +222,7 @@ class SListener(StreamListener):
         from datetime import timedelta
         # convert string of time into date time obejct
         df['created_at'] = pd.to_datetime(df.created_at) 
-     
+        print(df)
         # push tweet into database
         df.to_sql('tweet3', con=self.engine, if_exists='append', index=False)
         

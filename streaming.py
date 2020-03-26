@@ -11,9 +11,6 @@ from decouple import config
 # from key_secret import access_token, access_token_secret
 
 
-## library decouple
-
-
 api_key = 'dHdgnBwOWMZOF07zH5u4pR1NJ'
 key_secret = 'VR1k0nyst8MzNdbAaNdjrVb1XpoRXZPn0JtBcrUv96KDxxeLeR'
 
@@ -46,7 +43,6 @@ if DEVELOPER:
         # create a new database
         create_database(engine.url)
 
-create_database(engine.url)
 
 # begin collecting data
 while True:
