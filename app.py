@@ -9,14 +9,16 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
 import plotly_express as px
-import os
+import os, re, string
 import psycopg2
 from decouple import config
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
 
 DATABASE_URL = config('DATABASE_URL')
 
 con = psycopg2.connect(DATABASE_URL, sslmode='require')
-
 
 app_name = "Trich Twitter Dashboard"
 
@@ -225,7 +227,7 @@ app.layout = html.Div([
                     }),
             dcc.Interval(
                 id='graph-update',
-                interval=10*1000,
+                interval=5*1000,
                 n_intervals=0
             )
             #], className='six columns', style={ 'height': '350px', 'margin':'60px 0'}),
@@ -385,12 +387,6 @@ def remove_punct(text):
     text = re.sub('[0-9]+', '', text)
     return text
 
-# def tokenization(text):
-#     text = text.lower()
-#     text = re.findall("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+",text)
-#     #text = re.split('\W+', text)
-#     return text
-
 def remover_acentos(txt):
     return normalize('NFKD', txt).encode('ASCII', 'ignore').decode('ASCII') 
 
@@ -402,24 +398,11 @@ def remove_at(text):
     clean = re.sub(r'@[A-Za-z0-9]+','', text)
     return clean
 
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-
-# def cleaning_text(df_text):
-#     text = pd.DataFrame()
-#     text['pre_clean_len'] = [len(t) for t in df_text]
-#     text['remove_url'] = df_text.apply(remove_at)
-#     text['remove_at'] = text['remove_url'].apply(remove_at)
-#     text['text_punct'] = text['remove_at'].apply(remove_punct)
-#     text['data_clean'] = text['text_punct'].apply(remover_acentos)
-
-#     return [text['pre_clean_len'], text['data_clean']]
-
 
 @app.callback(Output('df-sharing', 'children'),
               [Input('graph-update', 'n_intervals')])
 def _update_div1(val_1):
-    # print(con)
-    # print(DATABASE_URL)
+
     df = pd.read_sql_query("SELECT * from tweet", con)
     return df.to_json(date_format='iso', orient='split')
 
@@ -428,7 +411,6 @@ def _update_div1(val_1):
 def _update_div1(df):
     df_ = pd.read_json(df, orient='split')
     df_.created_at = pd.to_datetime(df_.created_at)
-    print(df_)
     total_tweets, unique_texts, unique_texts_perc, unique_users, \
         top_20_posts, top_20_posts_perc, zero_retweets, zero_retweets_perc, time_inf = calc_tweet_metrics(df_)
     #df = df.sort_values('created_at')
@@ -542,22 +524,13 @@ def creating_hist():
     return hist_vals
     
 
-# if os.path('data/historical_vals.csv') exists:
-#     hist_vals = pd.DataFrame(data=[], columns=['created_at', 'index'])
-import os 
 
-# if os.path.exists('data/historical_vals.csv'): 
-#     hist_vals = pd.read_csv("data/historical_vals.csv", parse_dates=['created_at'], index_col=0)
-# else: 
+
+
 
 
 hist_vals = pd.DataFrame(data=[], columns=['created_at', 'index'])
 
-# conn = sqlite3.connect('pythonDB.db') 
-# c = conn.cursor() 
-
-# def create_table(): 
-#     c.execute('CREATE TABLE IF NOT EXISTS RecordONE (Number REAL, Name TEXT)')
 
 from datetime import timedelta
 @app.callback(Output('graph-5', 'figure'),
@@ -568,16 +541,16 @@ def _update_div1(df):
     global hist_vals
 
     df_ = pd.read_json(df, orient='split')
-
+    # df_.drop('index', axis=1, inplace=True)
     df_.created_at = pd.to_datetime(df_.created_at)
     df_.set_index('created_at', inplace=True)   
-
+    print(df_)
     hist_vals = hist_vals.append(df_.resample('1min').count()['index'].sort_index(ascending=False).reset_index()[1:-1].to_dict('row'))
     hist_vals = hist_vals.reset_index().drop('level_0', axis=1)
     hist_vals = hist_vals.sort_values('created_at', ascending=False).drop_duplicates('created_at', keep='last')
 
     fig = px.line(hist_vals[:72], x='created_at', y='index',
-                   title='The count of tweets for each 5 minutes')
+                   title='The count of tweets for each minute')
 
     fig.update_layout(xaxis=dict(title='Date/Minutes'), yaxis=dict(title='Count Total'), title_x=.5)
 
@@ -617,9 +590,6 @@ def clean_text(text):
     
     return text_no_doublespace
 
-import numpy as np
-
-import re, string
 
 def strip_links(text):
     link_regex    = re.compile('((https?):((//)|(\\\\))+([\w\d:#@%/;$()~_?\+-=\\\.&](#!)?)*)', re.DOTALL)
@@ -691,7 +661,9 @@ def _update_tfidf(data, val2):
                                             'senhora', 'anos', 'vezes', 'asno', 'mil','sou', 'medico', 'cobraram', 'prefiro', 
                                             'morrer', 'favelado', 'machuca', 'entao', 'fosse', 'qualquer', 'sai', 'horas', 
                                             'tenho', 'merito', 'tanta', 'futebol', 'fechar', 'nocao', 'olhos', 'diante', 'videos', 
-                                            'incrivel', 'ansiosos', 'forca', 'parabens'
+                                            'incrivel', 'ansiosos', 'forca', 'parabens', 'quanto', 'esses', 'tbm', 'parece', 'torcer',
+                                            'feed', 'mandando', 'samba', 'feliz', 'deve', 'porra', 'whatsapp', 'estar', 'imagina', 
+                                            'propria', 'merece', 'opiniao', 'vida', 'imagine', 'importa', 
                                             ], max_features=25,
                              )
 
@@ -744,7 +716,8 @@ def hastag_counts(df):
                                                                                                   '#BBB2O20', '#bbbb20', '#BBBB2O0',
                                                                                                   '#RedeBBBB20', '#BBBB200', '#BBBB2000',
                                                                                                   '#BBB20aovivo', '#BB', '#B', '#BBB2020',
-                                                                                                  'BBb20', 'RedeBBBB',  ]]
+                                                                                                  '#BBb20', '#RedeBBBB',  '#BBBB2O20', '#BBB20Aovivo', 
+                                                                                                  '#tv', '#bigBrotherBrasil', '#reality', '#realityShow']]
     #Separating the hashtags and their values into two different lists
     tags_bbb = pd.DataFrame(np.array(hashtag_ordered_list), columns=['#Tags', '#Num'])
     
