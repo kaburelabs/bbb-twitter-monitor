@@ -9,6 +9,7 @@ from sqlalchemy import text
 import datetime
 from sqlalchemy import text
 from decouple import config
+from datetime import timedelta
 
 
 PGHOST="ec2-3-91-112-166.compute-1.amazonaws.com"
@@ -208,7 +209,7 @@ class SListener(StreamListener):
         #     pass
 
         # uncomment the following to display tweets in the console
-        if self.cnt % 1500 == 0:
+        if self.cnt % 2 == 0:
             print("Writing tweet # {} to the database".format(self.cnt))
         # print("Tweet Created at: {}".format(tweet['created_at']))
         # print(tweet)
@@ -218,8 +219,6 @@ class SListener(StreamListener):
         # convert into dataframe
         df = pd.DataFrame(tweet, index=[0])
 
-        #print("df")
-        from datetime import timedelta
         # convert string of time into date time obejct
         df['created_at'] = pd.to_datetime(df.created_at) 
 
@@ -236,7 +235,7 @@ class SListener(StreamListener):
                             WHERE ((DATE_PART('day', now()::timestamp - created_at::timestamp) * 24 
                                                 + DATE_PART('hour', now()::timestamp - created_at::timestamp)) * 60 
                                                 + DATE_PART('minute', now()::timestamp - created_at::timestamp)) * 60 
-                                                + DATE_PART('second', now()::timestamp - created_at::timestamp) > 660) AS tweet_del) """
+                                                + DATE_PART('second', now()::timestamp - created_at::timestamp) > 480) AS tweet_del) """
         
 
         # d = addresses_table.delete().where(addresses_table.c.retired == 1)

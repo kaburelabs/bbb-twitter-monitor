@@ -10,10 +10,8 @@ from decouple import config
 # from key_secret import consumer_key, consumer_secret
 # from key_secret import access_token, access_token_secret
 
-
 api_key = 'dHdgnBwOWMZOF07zH5u4pR1NJ'
 key_secret = 'VR1k0nyst8MzNdbAaNdjrVb1XpoRXZPn0JtBcrUv96KDxxeLeR'
-
 access_token = '832282389598576640-4Asg7n5UNmHPSDEfdn1FGvrmvkYx2gD'
 token_secret = 'vrSZ3yiraNCrfOFJ2kkWlG13WjECS0cqFL6690k05GXg3'
 

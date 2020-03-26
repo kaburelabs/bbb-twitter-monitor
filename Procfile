@@ -1,2 +1,2 @@
-worker: python streaming.py db upgrade
+worker: python streaming.py
 web: gunicorn app:server
