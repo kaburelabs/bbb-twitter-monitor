@@ -4,7 +4,6 @@ import dash_html_components as html
 from dash.dependencies import Output, Input, State
 import dash_table
 import pandas as pd
-import sqlite3
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from urllib3.exceptions import ProtocolError
@@ -14,9 +13,14 @@ import psycopg2
 from decouple import config
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from unicodedata import normalize
+import nltk
+from nltk.tokenize import TweetTokenizer
+from unicodedata import normalize
 
 
 DATABASE_URL = config('DATABASE_URL')
+
 
 con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
@@ -131,18 +135,18 @@ def create_footer():
         style={'list-style-type': 'none', 'font-size':'30px'},
     )
 
-    hashtags = 'plotly,dash,trich.ai,wine,nlp'
-    tweet = 'trich.ai Wine Reviews WebApp, a cool dashboard with Plotly Dash!'
+    hashtags = 'plotly,dash,trich.ai,bbb20,data, streaming'
+    tweet = 'trich.ai Twitter Live Monitor, a cool dashboard with Plotly Dash!'
     twitter_href = 'https://twitter.com/intent/tweet?hashtags={}&text={}'\
         .format(hashtags, tweet)
     twitter = html.A(
         children=html.I(children=[], className='fa fa-twitter'),
         title='Tweet me!', href=twitter_href, target='_blank')
 
-    github = html.A(
-        children=html.I(children=[], className='fa fa-github', style={'color':'black'}),
-        title='Repo on GitHub',
-        href='https://github.com/kaburelabs/Wine-Project-Dash', target='_blank')
+    # github = html.A(
+    #     children=html.I(children=[], className='fa fa-github', style={'color':'black'}),
+    #     title='Repo on GitHub',
+    #     href='https://github.com/kaburelabs/Wine-Project-Dash', target='_blank')
 
     li_right_first = {'line-style-type': 'none', 'display': 'inline-block'}
     li_right_others = {k: v for k, v in li_right_first.items()}
@@ -150,7 +154,7 @@ def create_footer():
     ul2 = html.Ul(
         children=[
             html.Li(twitter, style=li_right_first),
-            html.Li(github, style=li_right_others),
+            # html.Li(github, style=li_right_others),
         ],
         style={
             'position': 'fixed',
@@ -173,12 +177,12 @@ def create_footer():
 
 
 app.layout = html.Div([
-    create_header("Twitter Monitor Dashboard"),
+    create_header("Twitter Live Monitor"),
     html.Div([
     html.Div(
     [ 
     html.Div([
-        html.Div([html.H1("Monitoramento Big Brother Brasil 20 ", style={'textAlign':'center'}),
+        html.Div([html.H1("Big Brother Brazil 20 Live Monitor", style={'textAlign':'center'}),
                   html.P("Monitoramento utilizando dados extraídos do Twitter e que pretende resumir as informações que estão acontecendo no programa Big Brother Brasil 20 que é produzido pela Rede Globo de Televisão."),
                   html.P(["O monitor foi desenvolvido e é mantido pela ", 
                           html.A('trich.ai', href='https://trich.ai', target='_blank' ),  
@@ -216,14 +220,14 @@ app.layout = html.Div([
     html.Div(id='df-sharing', style={'display': 'none'}),
     html.Div([
         # dcc.Loading(loading_state={'is_loading':False}),
-        html.Div([
+        html.Div([  
 
             #html.H4("TOP 20 most common words", style={'textAlign':'center','margin':}),
             dcc.Graph(id='tfidf-graph')
         ], className='five columns'),    
             html.Div(id='live-values', className='seven columns', # className='nine columns', 
                     style={ #'padding':'12px 48px', 'margin':'90px 0 18px',
-                            'display':'inline-block', 'margin':'60px 0 0', 'backgroundColor':'#C6D3B2',
+                            'display':'inline-block', 'margin':'60px 0 0', 'backgroundColor':'rgb(43, 169, 224, 0.26)',
                     }),
             dcc.Interval(
                 id='graph-update',
@@ -236,15 +240,16 @@ app.layout = html.Div([
 
     html.Div([
             html.Div([
-                html.H2("PRINCIPAIS RETWEETS")
+                html.H2("MAIN RETWEETS TO THIS MOMENT")
             ], className='row', style={'textAlign':'center'}),
             html.Div([
                 html.Div([
 
-                    html.P("TWEETS EM ALTA", style={'fontSize':'24px'})
+                    html.P("HOTNESS TWEETS NOW", style={'fontSize':'24px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'}),
+
                 html.Div([
-                    html.P("TWEETS COM MAIS COMPARTILHAMENTOS", style={'fontSize':'24px'})
+                    html.P("MOST SHARED TWEETS", style={'fontSize':'24px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'})
             ], className='row')
     ], className='row', style={'margin':'70px 0 12px'}),
@@ -349,12 +354,19 @@ app.layout = html.Div([
             ], className='four columns', style={'display':'inline-block', 'margin':'0 auto'},)
     ], className='row')
     ]),
+
     html.Div([
         html.Div([           
                 dcc.Graph(id='graph-5')
             ], className='twelve columns'),
+    ], className='row'),
 
-    ], className='row')
+    html.Div([
+        html.Div([           
+                dcc.Graph(id='output-iframe')
+            ], className='twelve columns')
+    ], className='row'),
+
 
     ], className='container'),
      create_footer()
@@ -419,7 +431,7 @@ def _update_div1(df):
             html.Div([
                 html.H5(style={'textAlign':'center','padding':'.1rem',
                                 'fontSize':'22px'}, className='title',
-                                    children=[f"Informações para os últimos {time_inf} minutos"])
+                                    children=[f"Information to the last {time_inf} minutes"])
                 ], className='row'),   
             html.Div(
                 children=[
@@ -504,6 +516,17 @@ def _update_div1(df):
                     ])
                     
 
+
+@app.callback([Output('output-iframe', 'children')],
+              [Input('df-sharing', 'children')])    
+def _update_div1(df):
+    df_ = pd.read_json(df, orient='split')
+    #df = pd.read_sql_query("SELECT text from tweet", con)
+    df_['count'] = df_.groupby(["text"])["created_at"].transform("count")
+    df_princ = df_.drop_duplicates('text', keep='last').sort_values('count', ascending=False)[['count', 'text', 'retweet_shares']].rename(columns={'retweet_shares':"# RT's"})
+
+    print(df_)
+    return [df_princ[:40].to_dict('rows')]
     
 @app.callback([Output('recommender-table', 'data'),
                Output('recommender-table2', 'data')],
@@ -524,11 +547,6 @@ def creating_hist():
     return hist_vals
     
 
-
-
-
-
-
 hist_vals = pd.DataFrame(data=[], columns=['created_at', 'index'])
 
 
@@ -544,7 +562,7 @@ def _update_div1(df):
     # df_.drop('index', axis=1, inplace=True)
     df_.created_at = pd.to_datetime(df_.created_at)
     df_.set_index('created_at', inplace=True)   
-    print(df_)
+
     hist_vals = hist_vals.append(df_.resample('1min').count()['index'].sort_index(ascending=False).reset_index()[1:-1].to_dict('row'))
     hist_vals = hist_vals.reset_index().drop('level_0', axis=1)
     hist_vals = hist_vals.sort_values('created_at', ascending=False).drop_duplicates('created_at', keep='last')
@@ -556,15 +574,6 @@ def _update_div1(df):
 
     return fig 
     
-
-
-import string
-from unicodedata import normalize
-import string
-import re
-import nltk
-from nltk.tokenize import TweetTokenizer
-from unicodedata import normalize
 
 punct = [i for i in string.punctuation if i not in ['#', '@']]
 
@@ -663,7 +672,9 @@ def _update_tfidf(data, val2):
                                             'tenho', 'merito', 'tanta', 'futebol', 'fechar', 'nocao', 'olhos', 'diante', 'videos', 
                                             'incrivel', 'ansiosos', 'forca', 'parabens', 'quanto', 'esses', 'tbm', 'parece', 'torcer',
                                             'feed', 'mandando', 'samba', 'feliz', 'deve', 'porra', 'whatsapp', 'estar', 'imagina', 
-                                            'propria', 'merece', 'opiniao', 'vida', 'imagine', 'importa', 
+                                            'propria', 'merece', 'opiniao', 'vida', 'imagine', 'importa', 'nesse', 'quarentena', 
+                                            'poderiam', 'almoco', 'dialogos', 'passa', 'sei', 'nesse', 'mexendo', 'ein', 'totalmente',
+                                            'quarto', 'tentar', 'levar', 'junto', 'mesma', 'tambem', 'povo', 'fav', 
                                             ], max_features=25,
                              )
 
@@ -707,9 +718,9 @@ def hastag_counts(df):
 
     hashtag_ordered_list =sorted(hashtag_dict.items(), key=lambda x:x[1])
     hashtag_ordered_list = hashtag_ordered_list[::-1]
-    hashtag_ordered_list = [words for words in hashtag_ordered_list if np.array(words)[0] not in ['#BBB', '#bbb', '#Redebbb',
+    hashtag_ordered_list = [words for words in hashtag_ordered_list if np.array(words)[0] not in ['#BBB', '#bbb', '#Redebbb', 'festaBbb20', 
                                                                                                   '#RedeBBB', '#redebbb', '#bbbb20',
-                                                                                                  '#BBBB', "#BBB20", "#bbb20",
+                                                                                                  '#BBBB', "#BBB20", "#bbb20", 
                                                                                                   '#bbb2020', '#BBBB20', '#Bbb20',
                                                                                                   '#REDEBBB', "#bbb202O", '#redeBBB',
                                                                                                   '#RedeBBB20', '#BBB2O', '#BBB2O2O',
