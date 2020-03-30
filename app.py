@@ -220,7 +220,7 @@ app.layout = html.Div([
                     "Feel free to contact us for a Proof of Concept (POC) for your brand, enterprise or even if you have interest in another WebApp types.",
                     className="mb-0", style={'fontSize':'14px'}
                 ),
-            ], style={'textAlign':'center'}, color='info', dismissable=True
+            ], style={'textAlign':'center', 'fontSize':'42px'}, color='info', dismissable=True
         )
     ], className='row', style={'width':'60%','margin':'auto'}),
     html.Div([

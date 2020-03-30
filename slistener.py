@@ -249,7 +249,7 @@ class SListener(StreamListener):
                             WHERE ((DATE_PART('day', now()::timestamp - created_at::timestamp) * 24 
                                                 + DATE_PART('hour', now()::timestamp - created_at::timestamp)) * 60 
                                                 + DATE_PART('minute', now()::timestamp - created_at::timestamp)) * 60 
-                                                + DATE_PART('second', now()::timestamp - created_at::timestamp) > 480) AS tweet_del) """
+                                                + DATE_PART('second', now()::timestamp - created_at::timestamp) >= 360) AS tweet_del) """
         
 
         # d = addresses_table.delete().where(addresses_table.c.retired == 1)
