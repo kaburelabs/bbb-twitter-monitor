@@ -18,7 +18,7 @@ import nltk
 from nltk.tokenize import TweetTokenizer
 from unicodedata import normalize
 import dash_bootstrap_components as dbc
-
+from dash.exceptions import PreventUpdate
 
 DATABASE_URL = config('DATABASE_URL')
 
@@ -273,7 +273,7 @@ app.layout = html.Div([
                     }),
             dcc.Interval(
                 id='graph-update',
-                interval=15*1000,
+                interval=5*1000,
                 n_intervals=0
             )
             #], className='six columns', style={ 'height': '350px', 'margin':'60px 0'}),
@@ -606,8 +606,15 @@ def resume_tweets(df, type='share'):
 
 @app.callback([Output('output-iframe-share', 'children'),
                Output('output-iframe-rt', 'children')],
-              [Input('df-sharing', 'children')])    
-def _update_div1(df):
+              [Input('df-sharing', 'children'), 
+               Input('graph-update', 'n_intervals')])    
+def _update_div1(df, n_val):
+
+    if ((n_val % 6 != 0 ) and (n_val >= 12)):
+        raise PreventUpdate
+    else:
+        pass
+
     df_ = pd.read_json(df, orient='split')
     # time.sleep(30)
     shared_tweets_list = []
