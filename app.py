@@ -17,6 +17,7 @@ from unicodedata import normalize
 import nltk
 from nltk.tokenize import TweetTokenizer
 from unicodedata import normalize
+import dash_bootstrap_components as dbc
 
 
 DATABASE_URL = config('DATABASE_URL')
@@ -27,7 +28,8 @@ con = psycopg2.connect(DATABASE_URL, sslmode='require')
 app_name = "Trich Twitter Dashboard"
 
 ## CSS EXTERNAL FILE
-external_stylesheets = ['https://codepen.io/kaburelabs/pen/xxGRXWa.css', 
+external_stylesheets = [dbc.themes.BOOTSTRAP,
+                        #'https://codepen.io/kaburelabs/pen/xxGRXWa.css', 
                         #"https://codepen.io/chriddyp/pen/brPBPO.css",
                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
                         'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
@@ -201,16 +203,33 @@ def create_footer():
 app.layout = html.Div([
     html.Div(className="sharethis-inline-share-buttons"),
     create_header("Twitter Live Monitor"),
+
     html.Div([
     html.Div(
     [ 
+    html.Div([dbc.Alert(
+            [
+                html.H2("Welcome to trich.ai Twitter Streaming WebApp!", className="alert-heading"),
+                html.Div([
+                    html.P([ "NOTE: The application auto updates the content every 30 seconds and as it is a free version of Heroku platform, sometimes it can 'sleep' and stop to collect the data."]),
+                    html.P([ "As it's hosted in a free Heroku host and it can be a little slow or don't render correctly the components. "])
+                    ], style={'fontSize':'18px'}
+                ),
+                html.Hr(),
+                html.P(
+                    "Feel free to contact us for a Proof of Concept (POC) for your brand, enterprise or even if you have interest in another WebApp types.",
+                    className="mb-0", style={'fontSize':'14px'}
+                ),
+            ], style={'textAlign':'center'}, color='info', dismissable=True
+        )
+    ], className='row', style={'width':'60%','margin':'auto'}),
     html.Div([
         html.Div([html.H1("Big Brother Brazil 20 Live Monitor", style={'textAlign':'center'}),
                   html.P("Monitoramento utilizando dados extraídos do Twitter e que pretende resumir as informações que estão acontecendo no programa Big Brother Brasil 20 que é produzido pela Rede Globo de Televisão."),
                   html.P(["O monitor foi desenvolvido e é mantido pela ", 
                           html.A('trich.ai', href='https://trich.ai', target='_blank' ),  
                           " que visa proporcionar informação utilizando big data para obter insights."])
-        ], className='row'),
+        ], className='row-m'),
         html.Div([
                 html.Div([
                     html.Img(
@@ -237,8 +256,8 @@ app.layout = html.Div([
                                     'display':'inline-block', }
                                     )
                             ], className='four columns', style={'textAlign':'center'})
-            ], className='row', style={'width':'80%', 'margin':'50px auto 15px'})
-    ], className='row', style={'width':'80%', 'margin': '50px auto'}),
+            ], className='row-m', style={'width':'80%', 'margin':'50px auto 15px'})
+    ], className='row-m', style={'width':'80%', 'margin': '50px auto'}),
 
     html.Div(id='df-sharing', style={'display': 'none'}),
     html.Div([
@@ -258,13 +277,13 @@ app.layout = html.Div([
                 n_intervals=0
             )
             #], className='six columns', style={ 'height': '350px', 'margin':'60px 0'}),
-    ], className='row', style={'height':'500px', 'width':'80%', 'margin':'auto'}),
+    ], className='row-m', style={'height':'500px', 'width':'80%', 'margin':'auto'}),
 
 
     html.Div([
             html.Div([
                 html.H2("MAIN TWEETS FOR THIS MOMENT")
-            ], className='row', style={'textAlign':'center'}),
+            ], className='row-m', style={'textAlign':'center'}),
             html.Div([
                 html.Div([
                     html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px'}),
@@ -275,13 +294,13 @@ app.layout = html.Div([
                     html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
                     html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'})
-            ], className='row')
-    ], className='row', style={'margin':'70px 0 12px'}),
+            ], className='row-m')
+    ], className='row-m', style={'margin':'70px 0 12px'}),
 
     html.Div([
         html.Div(id='output-iframe-share', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingRight':'36px'}),
         html.Div(id='output-iframe-rt', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'})
-    ], className='row', style={'textAlign':'center', 'marginBottom':'72px'}),
+    ], className='row-m', style={'textAlign':'center', 'marginBottom':'72px'}),
     
     # html.Div([
     #     html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
@@ -337,10 +356,10 @@ app.layout = html.Div([
     #                                     ], 
     #                 )
     #             ], className='six columns'),
-    #         ], className='row', style={'height':'500px'}),
+    #         ], className='row-m', style={'height':'500px'}),
 
     html.Div([
-        html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row', style={'textAlign':'center','fontSize':'30px', 'margin':'30px 0'}),
+        html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row-m', style={'textAlign':'center','fontSize':'30px', 'margin':'78px 0 0'}),
         # html.Div([
         #     html.P('Mais mencionados')
         # ], className='four columns', style={'textAlign':'center','fontSize':'24px'}),
@@ -350,7 +369,7 @@ app.layout = html.Div([
         # html.Div([
         #     html.P('blablalbal balbalba lbalbalba')
         # ], className='four columns', style={'textAlign':'center','fontSize':'24px'})
-    ]),
+    ], style={'marginTop':'36px'}),
 
     html.Div([
         
@@ -380,14 +399,14 @@ app.layout = html.Div([
                     ], style={'text-decoration': 'none', 'textAlign':'center', 'margin':'0 auto'}),
                 dcc.Graph(id='graph-4')
             ], className='four columns', style={'display':'inline-block', 'margin':'0 auto'},)
-    ], className='row')
+    ], className='row-m')
     ]),
 
     html.Div([
         html.Div([           
                 dcc.Graph(id='graph-5')
             ], className='twelve columns'),
-    ], className='row'),
+    ], className='row-m'),
 
 
     ], className='container'),
@@ -454,7 +473,7 @@ def _update_div1(df):
                 html.H5(style={'textAlign':'center','padding':'.1rem',
                                 'fontSize':'22px'}, className='title',
                                     children=[f"Information to the last {time_inf} minutes"])
-                ], className='row'),   
+                ], className='row-m'),   
             html.Div(
                 children=[
                     html.Div([
@@ -486,7 +505,7 @@ def _update_div1(df):
                                 html.H5(style={'textAlign':'center','color':'#3C4240','padding':'.1rem'},
                                                 children="Unique Users")                                        
                                         ], className='six columns', style={'display':'inline-block'}),
-                                        ], className='row', style={'width':'60%', 'margin':'auto'}),
+                                        ], className='row-m', style={'width':'60%', 'margin':'auto'}),
                 ] ),
            html.Div([
                         html.Div(
