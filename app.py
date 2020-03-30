@@ -33,8 +33,11 @@ external_stylesheets = ['https://codepen.io/kaburelabs/pen/xxGRXWa.css',
                         'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
 
 
+scripts_jquery = [{'src':"https://code.jquery.com/jquery-3.4.1.min.js"}]
+
+
 ## Defining the instance of dash
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, external_scripts=scripts_jquery)
 
 app.title = app_name
 
@@ -44,6 +47,25 @@ server = app.server
 # Since I am adding callbacks to elements that don’t ~
 # exist in the app.layout as they are spread throughout files
 app.config.suppress_callback_exceptions = True
+
+app.index_string = """<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+        <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5e8113b5c213f90019450492&product=inline-share-buttons&cms=website' async='async'></script>    
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>"""
 
 # # create a engine to the database
 # engine = create_engine("sqlite:///historical.sqlite")
@@ -177,6 +199,7 @@ def create_footer():
 
 
 app.layout = html.Div([
+    html.Div(className="sharethis-inline-share-buttons"),
     create_header("Twitter Live Monitor"),
     html.Div([
     html.Div(
@@ -231,7 +254,7 @@ app.layout = html.Div([
                     }),
             dcc.Interval(
                 id='graph-update',
-                interval=5*1000,
+                interval=15*1000,
                 n_intervals=0
             )
             #], className='six columns', style={ 'height': '350px', 'margin':'60px 0'}),
@@ -240,79 +263,84 @@ app.layout = html.Div([
 
     html.Div([
             html.Div([
-                html.H2("MAIN RETWEETS TO THIS MOMENT")
+                html.H2("MAIN TWEETS FOR THIS MOMENT")
             ], className='row', style={'textAlign':'center'}),
             html.Div([
                 html.Div([
-
-                    html.P("HOTNESS TWEETS NOW", style={'fontSize':'24px'})
+                    html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px'}),
+                    html.P("(Trends at this moment)", style={'fontSize':'18px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'}),
 
                 html.Div([
-                    html.P("MOST SHARED TWEETS", style={'fontSize':'24px'})
+                    html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
+                    html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'})
             ], className='row')
     ], className='row', style={'margin':'70px 0 12px'}),
 
+    html.Div([
+        html.Div(id='output-iframe-share', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingRight':'36px'}),
+        html.Div(id='output-iframe-rt', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'})
+    ], className='row', style={'textAlign':'center', 'marginBottom':'72px'}),
+    
+    # html.Div([
+    #     html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
+    #                 dash_table.DataTable(id='recommender-table', 
+    #                                     columns=[{'name':i, 'id':i} for i in ['count',  'text', "# RT's"]],
+    #                                     #page_size=5, 
+    #                                     fixed_columns={'headers': True, 'data': 0},
+    #                                     #style_as_list_view=True,
+    #                                     fixed_rows={'headers': True, 'data': 0},  
+    #                                     style_table={'maxHeight':'425px'}, 
+    #                                     style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
+    #                                     style_cell={"minWidth":"42px"},
+    #                                     style_data_conditional=[
+    #                                                 {
+    #                                                 'if': {'row_index': 'odd'},
+    #                                                 'backgroundColor': 'rgb(248, 248, 248)'
+    #                                                  }
+    #                                     ],       
+    #                                     style_cell_conditional=[
+    #                                         {'if': {'column_id': 'text'}, 'textAlign':'left',
+    #                                                                       'width': '350px',
+    #                                                                       'whiteSpace': 'normal', 'minHeight':'15px'},
+
+    #                                         {'if': {'column_id': "# RT's"}, 'width': '20px'},
+    #                                         {'if': {'column_id': "count"}, 'width': '20px'}
+    #                                     ], 
+    #                 )
+    #             ], className='six columns'),
+
+    #     html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
+    #                 dash_table.DataTable(id='recommender-table2', 
+    #                                     columns=[{'name':i, 'id':i} for i in ["# RT's", 'text', 'count']],
+    #                                     #page_size=5, 
+    #                                     fixed_columns={'headers': True, 'data': 0},
+    #                                     #style_as_list_view=True,
+    #                                     fixed_rows={'headers': True, 'data': 0},  
+    #                                     style_table={'maxHeight':'425px'}, 
+    #                                     style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
+    #                                     style_cell={"minWidth":"42px"},
+    #                                     style_data_conditional=[
+    #                                                 {
+    #                                                 'if': {'row_index': 'odd'},
+    #                                                 'backgroundColor': 'rgb(248, 248, 248)'
+    #                                                  }
+    #                                     ],       
+    #                                     style_cell_conditional=[
+    #                                         {'if': {'column_id': 'text'}, 'textAlign':'left',
+    #                                                                       'width': '350px',
+    #                                                                       'whiteSpace': 'normal', 'minHeight':'15px'},
+
+    #                                         {'if': {'column_id': "# RT's"}, 'width': '20px'},
+    #                                         {'if': {'column_id': "count"}, 'width': '20px'}
+    #                                     ], 
+    #                 )
+    #             ], className='six columns'),
+    #         ], className='row', style={'height':'500px'}),
 
     html.Div([
-        html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
-                    dash_table.DataTable(id='recommender-table', 
-                                        columns=[{'name':i, 'id':i} for i in ['count',  'text', "# RT's"]],
-                                        #page_size=5, 
-                                        fixed_columns={'headers': True, 'data': 0},
-                                        #style_as_list_view=True,
-                                        fixed_rows={'headers': True, 'data': 0},  
-                                        style_table={'maxHeight':'425px'}, 
-                                        style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-                                        style_cell={"minWidth":"42px"},
-                                        style_data_conditional=[
-                                                    {
-                                                    'if': {'row_index': 'odd'},
-                                                    'backgroundColor': 'rgb(248, 248, 248)'
-                                                     }
-                                        ],       
-                                        style_cell_conditional=[
-                                            {'if': {'column_id': 'text'}, 'textAlign':'left',
-                                                                          'width': '350px',
-                                                                          'whiteSpace': 'normal', 'minHeight':'15px'},
-
-                                            {'if': {'column_id': "# RT's"}, 'width': '20px'},
-                                            {'if': {'column_id': "count"}, 'width': '20px'}
-                                        ], 
-                    )
-                ], className='six columns'),
-
-        html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
-                    dash_table.DataTable(id='recommender-table2', 
-                                        columns=[{'name':i, 'id':i} for i in ["# RT's", 'text', 'count']],
-                                        #page_size=5, 
-                                        fixed_columns={'headers': True, 'data': 0},
-                                        #style_as_list_view=True,
-                                        fixed_rows={'headers': True, 'data': 0},  
-                                        style_table={'maxHeight':'425px'}, 
-                                        style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-                                        style_cell={"minWidth":"42px"},
-                                        style_data_conditional=[
-                                                    {
-                                                    'if': {'row_index': 'odd'},
-                                                    'backgroundColor': 'rgb(248, 248, 248)'
-                                                     }
-                                        ],       
-                                        style_cell_conditional=[
-                                            {'if': {'column_id': 'text'}, 'textAlign':'left',
-                                                                          'width': '350px',
-                                                                          'whiteSpace': 'normal', 'minHeight':'15px'},
-
-                                            {'if': {'column_id': "# RT's"}, 'width': '20px'},
-                                            {'if': {'column_id': "count"}, 'width': '20px'}
-                                        ], 
-                    )
-                ], className='six columns'),
-            ], className='row', style={'height':'500px'}),
-
-    html.Div([
-        html.Div(["Principais citações, menções e usuários mais ativos"], className='Row', style={'textAlign':'center','fontSize':'30px', 'margin':'30px 0'}),
+        html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row', style={'textAlign':'center','fontSize':'30px', 'margin':'30px 0'}),
         # html.Div([
         #     html.P('Mais mencionados')
         # ], className='four columns', style={'textAlign':'center','fontSize':'24px'}),
@@ -332,7 +360,7 @@ app.layout = html.Div([
                 # <i class="fas fa-at"></i>
                 html.Div([
                         html.I([], className='fa fa-at', style={'fontSize':'25px', 'fontWeight':'bold'}),
-                        html.Span(' Principais Menções', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
+                        html.Span(' MOST IMPORTANT MENTIONS', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
                     ], style={'text-decoration': 'none', 'textAlign':'center', 'margin':'0 auto'}),
                 dcc.Graph(id='graph-2')
             ], className='four columns', style={'display':'inline-block', 'margin':'0 auto'}),
@@ -340,7 +368,7 @@ app.layout = html.Div([
                 #<i class="fas fa-hashtag"></i>
                 html.Div([
                         html.I([], className='fa fa-hashtag', style={'fontSize':'25px'}),
-                        html.Span(' Principais Hashtags', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
+                        html.Span(' MOST IMPORTANT HASHTAGS', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
                     ], style={'text-decoration': 'none', 'textAlign':'center', 'margin':'0 auto'}),
                 dcc.Graph(id='graph-3')
             ], className='four columns', style={'display':'inline-block', 'margin':'0 auto'},),
@@ -348,7 +376,7 @@ app.layout = html.Div([
                 #<i class="fas fa-comment-medical"></i>
                 html.Div([
                         html.I([], className='fas fa-comment-medical', style={'fontSize':'25px'}),
-                        html.Span(' Usuário mais Ativos', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
+                        html.Span(' MOST ACTIVE USERS', style={'fontSize':'20px', 'font': 'sans-serif', 'fontWeight':'bold'})
                     ], style={'text-decoration': 'none', 'textAlign':'center', 'margin':'0 auto'}),
                 dcc.Graph(id='graph-4')
             ], className='four columns', style={'display':'inline-block', 'margin':'0 auto'},)
@@ -359,12 +387,6 @@ app.layout = html.Div([
         html.Div([           
                 dcc.Graph(id='graph-5')
             ], className='twelve columns'),
-    ], className='row'),
-
-    html.Div([
-        html.Div([           
-                dcc.Graph(id='output-iframe')
-            ], className='twelve columns')
     ], className='row'),
 
 
@@ -516,18 +538,77 @@ def _update_div1(df):
                     ])
                     
 
+def resume_tweets(df, type='share'):
 
-@app.callback([Output('output-iframe', 'children')],
+    list_twt = []
+
+    for i in list(range(30)):
+
+        user = df['id_user'].to_list()[i]
+        tweet = int(df['tweet_id'].to_list()[i])
+        is_rt = df['is_RT'].to_list()[i]
+        # if df_princ['retweet_user'].to_list()[i] != None:
+        #     rt_user = df_princ['retweet_user'].to_list()[i]
+        #     rt_tweet = int(df_princ['retweet_url'].to_list()[i])
+        link = df['retweeted_url'].to_list()[i]
+
+        if link == None:
+            link = df['quote_url'].to_list()[i]
+        else: 
+            pass
+
+        if link == None:
+            link = "https://twitter.com/{user}/status/{tweet}"
+        else:
+            pass
+
+        if type == 'share':
+            text = f"#{i+1} Most Shared - Total Shares: {df['count'].to_list()[i]}"
+        else: 
+            text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
+
+        list_twt.append(html.Div([#html.P(f"{i+1} is RT ({is_rt}) - TEXT {df_princ['text'].to_list()[i]}"),
+                                    html.P([text # | Link: {link}"
+                                            ], style={'textAlign':'center', 'fontWeight':'bold', 'fontSize':'18px'}),
+                                    html.Iframe(src=f"https://twitframe.com/show?url={link}", 
+                                                id='tweet_', 
+                                                style={'width':'100%',
+                                                        'minHeight':'250px', 
+                                                        'maxHeight':'700px',
+                                                        #'position':'relative',
+                                                        #'height':'100%',
+                                                        'border':'0', 'conversation':'None',
+                                                        'frameborder':'0',
+                                                        #'theme':'dark'
+                                                    })
+                                    ], style={'width':'100%', 'margin':'24px 0'}
+                                ))
+    return list_twt
+
+@app.callback([Output('output-iframe-share', 'children'),
+               Output('output-iframe-rt', 'children')],
               [Input('df-sharing', 'children')])    
 def _update_div1(df):
     df_ = pd.read_json(df, orient='split')
-    #df = pd.read_sql_query("SELECT text from tweet", con)
-    df_['count'] = df_.groupby(["text"])["created_at"].transform("count")
-    df_princ = df_.drop_duplicates('text', keep='last').sort_values('count', ascending=False)[['count', 'text', 'retweet_shares']].rename(columns={'retweet_shares':"# RT's"})
+    # time.sleep(30)
+    shared_tweets_list = []
+    rt_tweets_list = []
+    cols = ['text', 'id_user', 'tweet_id', 'is_RT', 'retweet_user', 
+            'quote_url', 'retweeted_url', 'count']
 
-    print(df_)
-    return [df_princ[:40].to_dict('rows')]
+    df_['count'] = df_.groupby(["text"])["tweet_id"].transform("count")
+    df_princ = df_.drop_duplicates('text', keep='first').sort_values('count', ascending=False)[cols]
+    df_princ1 = df_.drop_duplicates('text', keep='last').sort_values('retweet_shares', ascending=False)[cols].rename(columns={'retweet_shares':"# RT's"})
+
+    # print(df_princ.columns)
+    # df = df_[df_.index.isin(df_.text.drop_duplicates(keep='last').index)].sort_values('retweet_likes', ascending=False)[:20]
+
+    shared_tweets_list = resume_tweets(df_princ)
+    rt_tweets_list = resume_tweets(df_princ1, type='rt')
+
+    return [shared_tweets_list, rt_tweets_list]
     
+
 @app.callback([Output('recommender-table', 'data'),
                Output('recommender-table2', 'data')],
               [Input('df-sharing', 'children')])    
@@ -674,7 +755,10 @@ def _update_tfidf(data, val2):
                                             'feed', 'mandando', 'samba', 'feliz', 'deve', 'porra', 'whatsapp', 'estar', 'imagina', 
                                             'propria', 'merece', 'opiniao', 'vida', 'imagine', 'importa', 'nesse', 'quarentena', 
                                             'poderiam', 'almoco', 'dialogos', 'passa', 'sei', 'nesse', 'mexendo', 'ein', 'totalmente',
-                                            'quarto', 'tentar', 'levar', 'junto', 'mesma', 'tambem', 'povo', 'fav', 
+                                            'quarto', 'tentar', 'levar', 'junto', 'mesma', 'tambem', 'povo', 'fav', 'planejando',
+                                            'link', 'meta', 'iniciado', 'existe', 'tipos', 'camisa', 'fora', 'brasil', 'votem',
+                                            'foco', 'enviem', 'parar', 'total', 'jogadores', 'gshow', 'termino', 'feat', 'pano', 'disseobrigada',
+                                            'chao', 'doar', 'votarem', 
                                             ], max_features=25,
                              )
 

@@ -1,7 +1,7 @@
 $(document).ready(function() {
     /* find all iframes with ids starting with "tweet_" */
     console.log("blablabala");
-    $("iframe[id^='tweets']").load(function() {
+    $("iframe[id^='tweet_']").load(function() {
         this.contentWindow.postMessage({ element: this.id, query: "height" },
             "https://twitframe.com");
     });
@@ -14,7 +14,7 @@ $(window).bind("message", function(e) {
     if (oe.origin != "https://twitframe.com")
         return;
 	
-    if (oe.data.height && oe.data.element.match(/^tweets/))
+    if (oe.data.height && oe.data.element.match(/^tweet_/))
         $("#" + oe.data.element).css("height", parseInt(oe.data.height) + "px");
 });
 

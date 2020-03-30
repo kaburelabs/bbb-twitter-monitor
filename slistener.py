@@ -57,6 +57,8 @@ class SListener(StreamListener):
         quot_reply = None
         quote_post_id = None
         retweet_id = None
+        tweet_link = None
+        tweet_quote = None 
 
         #print(status_data)
         # print(f"User Id: {status_data['user']['screen_name']}")
@@ -73,6 +75,10 @@ class SListener(StreamListener):
             retweet_reply = status_data['retweeted_status']['reply_count'] 
             orig_post_user_ret = status_data['retweeted_status']['user']['screen_name']
             retweet_id = status_data['retweeted_status']['id_str']
+            # tweet_link = status_data['retweeted_status']['extended_entities']['media'][0]['expanded_url']
+            tweet_link = f"https://twitter.com/{orig_post_user_ret}/status/{retweet_id}"
+            #print(status_data)
+            
             ### https://twitter.com/Rudysb1hotmail2/status/{retweet_id}
 
         if 'retweeted_status' in status_data and 'extended_tweet' not in status_data['retweeted_status']:
@@ -83,6 +89,9 @@ class SListener(StreamListener):
             retweet_reply = status_data['retweeted_status']['reply_count'] 
             orig_post_user_ret = status_data['retweeted_status']['user']['screen_name']
             retweet_id = status_data['retweeted_status']['id_str']
+            tweet_link = f"https://twitter.com/{orig_post_user_ret}/status/{retweet_id}"
+
+            
 
             ### https://twitter.com/Rudysb1hotmail2/status/{retweet_id}   
         if 'quoted_status' in status_data and 'extended_tweet' in status_data['quoted_status']:
@@ -92,6 +101,8 @@ class SListener(StreamListener):
             quot_reply = status_data['quoted_status']['reply_count'] 
             orig_post_user = status_data['quoted_status']['user']['screen_name']
             quote_post_id = status_data['quoted_status']['id_str'] 
+            tweet_quote = f"https://twitter.com/{orig_post_user}/status/{quote_post_id}"
+            #print(status_data)
 
         if 'quoted_status' in status_data and 'extended_tweet' not in status_data['quoted_status']:
             full_text_list.append(status_data['quoted_status']['text'])
@@ -100,7 +111,7 @@ class SListener(StreamListener):
             quot_reply = status_data['quoted_status']['reply_count'] 
             orig_post_user = status_data['quoted_status']['user']['screen_name']
             quote_post_id = status_data['quoted_status']['id_str'] 
-
+            tweet_quote = f"https://twitter.com/{orig_post_user}/status/{quote_post_id}"
             ### https://twitter.com/i/web/status/{id_str}   
 
             #print(orig_post_user)
@@ -122,7 +133,7 @@ class SListener(StreamListener):
             retweet_reply = status_data['retweeted_status']['reply_count'] 
             orig_post_user_ret = status_data['retweeted_status']['user']['screen_name']
             retweet_id = status_data['retweeted_status']['id_str']
-            #print("RT sem retweet", status_data)
+            print("RT sem retweet", status_data)
    
         # if (orig_post_user_ret == None) and (orig_post_user == None):
         #     print(orig_post_user_ret, orig_post_user)
@@ -191,16 +202,19 @@ class SListener(StreamListener):
             'retweet_shares': retweet_share,
             'retweet_likes':  retweet_like, 
             'retweet_reply':  retweet_reply,     
-            'retweet_url': retweet_id,
+            'retweet_id': retweet_id,
+            'retweeted_url': tweet_link,
 
             'is_quote': is_Quote_of(status_data),        
             'quoted_user': orig_post_user,
             'quoted_shares': quot_share,
             'quoted_likes':  quot_like, 
             'quoted_reply':  quot_reply,   
-            'orig_tweet_quoted': quote_post_id
+            'orig_tweet_quoted': quote_post_id,
+            'quote_url': tweet_quote
 
         }
+
 
         # if 'RT @' not in full_text:
         #     print('with no @', status_data)
