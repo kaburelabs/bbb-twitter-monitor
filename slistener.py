@@ -12,11 +12,6 @@ from decouple import config
 from datetime import timedelta
 
 
-PGHOST="ec2-3-91-112-166.compute-1.amazonaws.com"
-PGDATABASE="d20nasndbdf4ji"
-PGUSER="wcfuxixmvpozqs"
-PGPASSWORD="14e6ab5baf1c583230cfaecd28fc9a1bd3fabdb25d4231a763767bedfeba831a"
-
 DATABASE_URL = config('DATABASE_URL')
 
 # inherit from StreamListener class

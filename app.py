@@ -19,9 +19,9 @@ from nltk.tokenize import TweetTokenizer
 from unicodedata import normalize
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
+import visdcc
 
 DATABASE_URL = config('DATABASE_URL')
-
 
 con = psycopg2.connect(DATABASE_URL, sslmode='require')
 
@@ -41,6 +41,8 @@ scripts_jquery = [{'src':"https://code.jquery.com/jquery-3.4.1.min.js"}]
 ## Defining the instance of dash
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, external_scripts=scripts_jquery)
 
+
+
 app.title = app_name
 
 # server instance to run map when deploying
@@ -57,7 +59,8 @@ app.index_string = """<!DOCTYPE html>
         <title>{%title%}</title>
         {%favicon%}
         {%css%}
-        <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5e8113b5c213f90019450492&product=inline-share-buttons&cms=website' async='async'></script>    
+        
+        <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5e8113b5c213f90019450492&product=inline-share-buttons&cms=website' async='async'></script>
     </head>
     <body>
         {%app_entry%}
@@ -68,14 +71,9 @@ app.index_string = """<!DOCTYPE html>
         </footer>
     </body>
 </html>"""
-
-# # create a engine to the database
-# engine = create_engine("sqlite:///historical.sqlite")
-# # if the database does not exist
-# if not database_exists(engine.url):
-#     # create a new database
-#     create_database(engine.url)
-
+## <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+app.scripts.config.serve_locally = True
+app.css.config.serve_locally = True
 
 def create_header(some_string):
     header_style = {
@@ -294,70 +292,14 @@ app.layout = html.Div([
                     html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
                     html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})
                 ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'})
-            ], className='row-m')
+            ], className='row-m', style={'margin':"0 auto"})
     ], className='row-m', style={'margin':'70px 0 12px'}),
 
-    html.Div([
-        html.Div(id='output-iframe-share', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingRight':'36px'}),
-        html.Div(id='output-iframe-rt', className='six columns', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'})
-    ], className='row-m', style={'textAlign':'center', 'marginBottom':'72px'}),
-    
-    # html.Div([
-    #     html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
-    #                 dash_table.DataTable(id='recommender-table', 
-    #                                     columns=[{'name':i, 'id':i} for i in ['count',  'text', "# RT's"]],
-    #                                     #page_size=5, 
-    #                                     fixed_columns={'headers': True, 'data': 0},
-    #                                     #style_as_list_view=True,
-    #                                     fixed_rows={'headers': True, 'data': 0},  
-    #                                     style_table={'maxHeight':'425px'}, 
-    #                                     style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-    #                                     style_cell={"minWidth":"42px"},
-    #                                     style_data_conditional=[
-    #                                                 {
-    #                                                 'if': {'row_index': 'odd'},
-    #                                                 'backgroundColor': 'rgb(248, 248, 248)'
-    #                                                  }
-    #                                     ],       
-    #                                     style_cell_conditional=[
-    #                                         {'if': {'column_id': 'text'}, 'textAlign':'left',
-    #                                                                       'width': '350px',
-    #                                                                       'whiteSpace': 'normal', 'minHeight':'15px'},
-
-    #                                         {'if': {'column_id': "# RT's"}, 'width': '20px'},
-    #                                         {'if': {'column_id': "count"}, 'width': '20px'}
-    #                                     ], 
-    #                 )
-    #             ], className='six columns'),
-
-    #     html.Div([#html.P('TOP 25 MOST SHARED TWEETS', style={'padding':'.5rem', 'textAlign':'center'}), 
-    #                 dash_table.DataTable(id='recommender-table2', 
-    #                                     columns=[{'name':i, 'id':i} for i in ["# RT's", 'text', 'count']],
-    #                                     #page_size=5, 
-    #                                     fixed_columns={'headers': True, 'data': 0},
-    #                                     #style_as_list_view=True,
-    #                                     fixed_rows={'headers': True, 'data': 0},  
-    #                                     style_table={'maxHeight':'425px'}, 
-    #                                     style_header={'fontWeight': 'bold', 'fontSize':'14px', 'textAlign':'center',},
-    #                                     style_cell={"minWidth":"42px"},
-    #                                     style_data_conditional=[
-    #                                                 {
-    #                                                 'if': {'row_index': 'odd'},
-    #                                                 'backgroundColor': 'rgb(248, 248, 248)'
-    #                                                  }
-    #                                     ],       
-    #                                     style_cell_conditional=[
-    #                                         {'if': {'column_id': 'text'}, 'textAlign':'left',
-    #                                                                       'width': '350px',
-    #                                                                       'whiteSpace': 'normal', 'minHeight':'15px'},
-
-    #                                         {'if': {'column_id': "# RT's"}, 'width': '20px'},
-    #                                         {'if': {'column_id': "count"}, 'width': '20px'}
-    #                                     ], 
-    #                 )
-    #             ], className='six columns'),
-    #         ], className='row-m', style={'height':'500px'}),
-
+    dbc.Row([
+        dbc.Col(html.Div(id='output-iframe-share', style={'height':'600px',   'overflowY':'auto', 'paddingRight':'36px'}), width=6),
+        dbc.Col(html.Div(id='output-iframe-rt', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'}), width=6)
+    ], style={'textAlign':'center', 'marginBottom':'72px'}),
+ 
     html.Div([
         html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row-m', style={'textAlign':'center','fontSize':'30px', 'margin':'78px 0 0'}),
         # html.Div([
@@ -457,6 +399,7 @@ def remove_at(text):
 def _update_div1(val_1):
 
     df = pd.read_sql_query("SELECT * from tweet", con)
+    
     return df.to_json(date_format='iso', orient='split')
 
 @app.callback(Output('live-values', 'children'),
@@ -566,9 +509,7 @@ def resume_tweets(df, type='share'):
         user = df['id_user'].to_list()[i]
         tweet = int(df['tweet_id'].to_list()[i])
         is_rt = df['is_RT'].to_list()[i]
-        # if df_princ['retweet_user'].to_list()[i] != None:
-        #     rt_user = df_princ['retweet_user'].to_list()[i]
-        #     rt_tweet = int(df_princ['retweet_url'].to_list()[i])
+
         link = df['retweeted_url'].to_list()[i]
 
         if link == None:
@@ -586,22 +527,11 @@ def resume_tweets(df, type='share'):
         else: 
             text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
 
-        list_twt.append(html.Div([#html.P(f"{i+1} is RT ({is_rt}) - TEXT {df_princ['text'].to_list()[i]}"),
-                                    html.P([text # | Link: {link}"
-                                            ], style={'textAlign':'center', 'fontWeight':'bold', 'fontSize':'18px'}),
-                                    html.Iframe(src=f"https://twitframe.com/show?url={link}", 
-                                                id='tweet_', 
-                                                style={'width':'100%',
-                                                        'minHeight':'250px', 
-                                                        'maxHeight':'700px',
-                                                        #'position':'relative',
-                                                        #'height':'100%',
-                                                        'border':'0', 'conversation':'None',
-                                                        'frameborder':'0',
-                                                        #'theme':'dark'
-                                                    })
-                                    ], style={'width':'100%', 'margin':'24px 0'}
-                                ))
+        list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', 'fontSize':'18px'}), 
+                                  html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width':"480px"})], style={"margin":"48px 64px"}))
+
+    list_twt.append(visdcc.Run_js(id="javascript", run="twttr.widgets.load()"))
+ 
     return list_twt
 
 @app.callback([Output('output-iframe-share', 'children'),
@@ -610,7 +540,7 @@ def resume_tweets(df, type='share'):
                Input('graph-update', 'n_intervals')])    
 def _update_div1(df, n_val):
 
-    if ((n_val % 6 != 0 ) and (n_val >= 12)):
+    if ((n_val % 6 != 0 ) and (n_val >= 16)):
         raise PreventUpdate
     else:
         pass
@@ -619,7 +549,8 @@ def _update_div1(df, n_val):
     # time.sleep(30)
     shared_tweets_list = []
     rt_tweets_list = []
-    cols = ['text', 'id_user', 'tweet_id', 'is_RT', 'retweet_user', 
+    cols = ['text', 'id_user', 'tweet_id', 
+            'is_RT', 'retweet_user', 
             'quote_url', 'retweeted_url', 'count']
 
     df_['count'] = df_.groupby(["text"])["tweet_id"].transform("count")
@@ -784,7 +715,10 @@ def _update_tfidf(data, val2):
                                             'quarto', 'tentar', 'levar', 'junto', 'mesma', 'tambem', 'povo', 'fav', 'planejando',
                                             'link', 'meta', 'iniciado', 'existe', 'tipos', 'camisa', 'fora', 'brasil', 'votem',
                                             'foco', 'enviem', 'parar', 'total', 'jogadores', 'gshow', 'termino', 'feat', 'pano', 'disseobrigada',
-                                            'chao', 'doar', 'votarem', 
+                                            'chao', 'doar', 'votarem', 'extremamente', 'proximo', 'torcendo',   'indo',
+                                            'nas', 'olha', 'jeito', 'quase', 'gt', 'suporto', 'indo', 'menina', 'costas', 'debochada', 'multirao',
+                                            'lt', 'gratuito', 'desculpa', 'forcada', 'insuportavel', 'projetinho', 'desabafei', 'leve',
+                                            'cruzes', 'trinta', 'meio', 'espalhar', 'xexelenta', 'meio',     
                                             ], max_features=25,
                              )
 
@@ -921,9 +855,3 @@ def _update_div1(df):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-
-
-
-
