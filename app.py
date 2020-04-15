@@ -278,27 +278,20 @@ app.layout = html.Div([
     ], className='row-m', style={'height':'500px', 'width':'80%', 'margin':'auto'}),
 
 
-    html.Div([
+    dbc.Row([
             html.Div([
                 html.H2("MAIN TWEETS FOR THIS MOMENT")
-            ], className='row-m', style={'textAlign':'center'}),
-            html.Div([
-                html.Div([
-                    html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px'}),
-                    html.P("(Trends at this moment)", style={'fontSize':'18px'})
-                ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'}),
-
-                html.Div([
-                    html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
-                    html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})
-                ], className='six columns', style={'textAlign':'center', 'padding':'24px 35px 0'})
-            ], className='row-m', style={'margin':"0 auto"})
-    ], className='row-m', style={'margin':'70px 0 12px'}),
+            ], style={'textAlign':'center', "width":'100%'}),
+    ], style={'margin':'70px 0 12px'}),
 
     dbc.Row([
-        dbc.Col(html.Div(id='output-iframe-share', style={'height':'600px',   'overflowY':'auto', 'paddingRight':'36px'}), width=6),
+        dbc.Col([html.Div([html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px', "textAlign":'center'}),
+                           html.P("(Trends at this moment)", style={'fontSize':'18px', "textAlign":'center'})], style={'textAlign':'center'}),
+                html.Div(id='output-iframe-share', style={'height':'750px',   'overflowY':'auto', "background":"aliceblue", "padding":"0 36px"})], width=6),
 
-        dbc.Col(html.Div(id='output-iframe-rt', style={'height':'600px',  'overflowY':'auto', 'direction':'rtl', 'paddingLeft':'36px'}), width=6)
+        dbc.Col([html.Div([html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
+                          html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})], style={"textAlign":'center'}),
+                 html.Div(id='output-iframe-rt', style={'height':'750px',  'overflowY':'auto', 'direction':'rtl', "background":"aliceblue", "padding":"0 36px"})], width=6)
     ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'85%'}),
  
     html.Div([
@@ -528,9 +521,11 @@ def resume_tweets(df, type='share'):
         else: 
             text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
 
-        list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', "direction":"ltr",  'fontSize':'18px'}), 
+
+        list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', "direction":"ltr",
+                                                           'fontSize':'18px'}), 
                                   html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width':"498px"})], 
-                        style={"margin":"48px 0"}))
+                        style={"margin":"48px 0" }))
 
     list_twt.append(visdcc.Run_js(id="javascript", run="twttr.widgets.load()"))
  
