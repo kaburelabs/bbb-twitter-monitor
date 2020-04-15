@@ -298,7 +298,7 @@ app.layout = html.Div([
     dbc.Row([
         dbc.Col(html.Div(id='output-iframe-share', style={'height':'600px',   'overflowY':'auto', 'paddingRight':'36px'}), width=6),
 
-        dbc.Col(html.Div(id='output-iframe-rt', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'}), width=6)
+        dbc.Col(html.Div(id='output-iframe-rt', style={'height':'600px',  'overflowY':'auto', 'direction':'rtl', 'paddingLeft':'36px'}), width=6)
     ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'85%'}),
  
     html.Div([
@@ -526,9 +526,9 @@ def resume_tweets(df, type='share'):
         if type == 'share':
             text = f"#{i+1} Most Shared - Total Shares: {df['count'].to_list()[i]} "
         else: 
-            text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]} "
+            text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
 
-        list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', 'fontSize':'18px'}), 
+        list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', "direction":"ltr",  'fontSize':'18px'}), 
                                   html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width':"498px"})], 
                         style={"margin":"48px 0"}))
 
