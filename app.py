@@ -227,7 +227,7 @@ app.layout = html.Div([
                   html.P(["O monitor foi desenvolvido e é mantido pela ", 
                           html.A('trich.ai', href='https://trich.ai', target='_blank' ),  
                           " que visa proporcionar informação utilizando big data para obter insights."])
-        ], className='row-m'),
+        ], className='row-m', style={"width":'70%', 'margin':'0 auto'}),
         html.Div([
                 html.Div([
                     html.Img(
@@ -255,7 +255,7 @@ app.layout = html.Div([
                                     )
                             ], className='four columns', style={'textAlign':'center'})
             ], className='row-m', style={'width':'80%', 'margin':'50px auto 15px'})
-    ], className='row-m', style={'width':'80%', 'margin': '50px auto'}),
+    ], className='row-m', style={'width':'80%', 'margin': '12px auto', "background":"aliceblue", "padding":"55px 32px"}),
 
     html.Div(id='df-sharing', style={'display': 'none'}),
     html.Div([
@@ -287,11 +287,13 @@ app.layout = html.Div([
     dbc.Row([
         dbc.Col([html.Div([html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px', "textAlign":'center'}),
                            html.P("(Trends at this moment)", style={'fontSize':'18px', "textAlign":'center'})], style={'textAlign':'center'}),
-                html.Div(id='output-iframe-share', style={'height':'750px',   'overflowY':'auto', "background":"aliceblue", "padding":"0 36px"})], width=6),
+                html.Div(id='output-iframe-share', style={'height':'750px', 'overflowY':'auto', 
+                                                          "background":"aliceblue", "padding":"0 24px"})], width=6),
 
         dbc.Col([html.Div([html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
                           html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})], style={"textAlign":'center'}),
-                 html.Div(id='output-iframe-rt', style={'height':'750px',  'overflowY':'auto', 'direction':'rtl', "background":"aliceblue", "padding":"0 36px"})], width=6)
+                 html.Div(id='output-iframe-rt', style={'height':'750px', 'overflowY':'auto', 
+                                                        'direction':'rtl', "background":"aliceblue", "padding":"0 24px"})], width=6)
     ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'85%'}),
  
     html.Div([
