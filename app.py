@@ -297,8 +297,9 @@ app.layout = html.Div([
 
     dbc.Row([
         dbc.Col(html.Div(id='output-iframe-share', style={'height':'600px',   'overflowY':'auto', 'paddingRight':'36px'}), width=6),
+
         dbc.Col(html.Div(id='output-iframe-rt', style={'height':'600px',  'overflowY':'auto', 'paddingLeft':'36px'}), width=6)
-    ], style={'textAlign':'center', 'marginBottom':'72px'}),
+    ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'85%'}),
  
     html.Div([
         html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row-m', style={'textAlign':'center','fontSize':'30px', 'margin':'78px 0 0'}),
@@ -523,12 +524,13 @@ def resume_tweets(df, type='share'):
             pass
 
         if type == 'share':
-            text = f"#{i+1} Most Shared - Total Shares: {df['count'].to_list()[i]}"
+            text = f"#{i+1} Most Shared - Total Shares: {df['count'].to_list()[i]} "
         else: 
-            text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
+            text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]} "
 
         list_twt.append(html.Div([html.P(f"{text}", style={'textAlign':'center', 'fontWeight':'bold', 'fontSize':'18px'}), 
-                                  html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width':"480px"})], style={"margin":"48px 64px"}))
+                                  html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width':"498px"})], 
+                        style={"margin":"48px 0"}))
 
     list_twt.append(visdcc.Run_js(id="javascript", run="twttr.widgets.load()"))
  
