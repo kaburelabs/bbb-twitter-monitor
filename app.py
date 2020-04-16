@@ -288,13 +288,13 @@ app.layout = html.Div([
         dbc.Col([html.Div([html.P("MOST SHARED TWEETS NOW", style={'fontSize':'24px', "textAlign":'center'}),
                            html.P("(Trends at this moment)", style={'fontSize':'18px', "textAlign":'center'})], style={'textAlign':'center'}),
                 html.Div(id='output-iframe-share', style={'height':'750px', 'overflowY':'auto', 
-                                                          "background":"aliceblue", "padding":"0 24px"})], width=6),
+                                                          "background":"aliceblue", "padding":"0 42px"})], width=6),
 
         dbc.Col([html.Div([html.P("MOST RETWEETED TWEETS", style={'fontSize':'24px'}),
                           html.P("(More Long term tweets - not necessarily at this moment)", style={'fontSize':'18px'})], style={"textAlign":'center'}),
                  html.Div(id='output-iframe-rt', style={'height':'750px', 'overflowY':'auto', 
-                                                        'direction':'rtl', "background":"aliceblue", "padding":"0 24px"})], width=6)
-    ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'85%'}),
+                                                        'direction':'rtl', "background":"aliceblue", "padding":"0 42px"})], width=6)
+    ], style={'textAlign':'center', 'margin':'0 auto 72px', 'width':'90%'}),
  
     html.Div([
         html.Div(["MOST IMPORTANT MENTIONS, HASHTAGS AND USERS"], className='Row-m', style={'textAlign':'center','fontSize':'30px', 'margin':'78px 0 0'}),
@@ -717,7 +717,8 @@ def _update_tfidf(data, val2):
                                             'chao', 'doar', 'votarem', 'extremamente', 'proximo', 'torcendo',   'indo',
                                             'nas', 'olha', 'jeito', 'quase', 'gt', 'suporto', 'indo', 'menina', 'costas', 'debochada', 'multirao',
                                             'lt', 'gratuito', 'desculpa', 'forcada', 'insuportavel', 'projetinho', 'desabafei', 'leve',
-                                            'cruzes', 'trinta', 'meio', 'espalhar', 'xexelenta', 'meio',     
+                                            'cruzes', 'trinta', 'meio', 'espalhar', 'xexelenta', 'meio', 'seus', 'choro', 'rolou', 'risada',
+                                            'aperte', 'comentarios', 'temia', 'furacao', 'comentar', 'choro', 'confira',     
                                             ], max_features=25,
                              )
 
