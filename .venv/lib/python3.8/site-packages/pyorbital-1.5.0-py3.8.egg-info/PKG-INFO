@@ -1,0 +1,17 @@
+Metadata-Version: 1.1
+Name: pyorbital
+Version: 1.5.0
+Summary: Orbital parameters and astronomical computations in Python
+Home-page: https://github.com/pytroll/pyorbital
+Author: Martin Raspaud, Esben S. Nielsen
+Author-email: martin.raspaud@smhi.se
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Astronomy

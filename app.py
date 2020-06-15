@@ -1,29 +1,34 @@
-from nltk.corpus import stopwords
-from datetime import timedelta
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Output, Input, State
-import dash_table
-import pandas as pd
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
-from urllib3.exceptions import ProtocolError
-import plotly_express as px
-import os
-import re
-import string
-import psycopg2
-from decouple import config
-import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from unicodedata import normalize
-import nltk
-from nltk.tokenize import TweetTokenizer
-from unicodedata import normalize
-import dash_bootstrap_components as dbc
+
+# stop words
+
+# from nltk.corpus import stopwords
 from dash.exceptions import PreventUpdate
+import dash_bootstrap_components as dbc
+from nltk.tokenize import TweetTokenizer
+import nltk
+from unicodedata import normalize
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+import numpy as np
+from decouple import config
+import psycopg2
+import string
+import re
+import os
+import plotly_express as px
+from urllib3.exceptions import ProtocolError
+from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy import create_engine
+import pandas as pd
+import dash_table
+from dash.dependencies import Output, Input, State
+import dash_html_components as html
+import dash_core_components as dcc
+import dash
+from datetime import timedelta
+
 import visdcc
+
+# nltk.download('stopwords')
 
 DATABASE_URL = config('DATABASE_URL')
 
@@ -84,9 +89,23 @@ app.index_string = """<!DOCTYPE html>
 app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 
-# stop words
-nltk.download('stopwords')
-stop_words = set(stopwords.words("english"))
+
+stop_words = {'hadn', "isn't", 'ma', "shouldn't", 'an', 'to', 'nor', 'why', "didn't", 'against',
+              'haven', 'in', 'from', 'off', 'as', 'its', "should've", 'hasn', "you've", "hasn't", 'been', 'his',
+              "that'll", 'not', 'after', 'all', 'mightn', 'again', 'll', "you'll", 'by', 'what', 'there', 'most',
+              'this', 'ours', 't', 'further', 'should', 'wouldn', 'because', 'have', 'those', 'don', 'up', 'too',
+              'o', 'these', 'does', 'down', "she's", 'itself', 'a', 'of', 'aren', 'she', 'now', 'weren', 'then',
+              'own', 'but', 'through', 'who', 'than', 'needn', 'are', "needn't", 'yourselves', 'myself', 'while',
+              'where', "won't", 'hers', "haven't", 'him', 'some', 'shan', 'above', 'be', 'at', 'their', 'if',
+              "mustn't", 'only', 'on', 'more', 'being', 'no', 'them', 've', "weren't", "wasn't", "aren't",
+              'here', 'shouldn', 'for', 'mustn', "you're", 'didn', 'under', 'did', 'such', 'between',
+              'am', 'just', 'it', 'once', "hadn't", 'very', 'each', "mightn't", 'had', "shan't", 'we',
+              'will', 'he', 'themselves', 'the', 'about', 'over', 'few', 'during', "couldn't", 'isn',
+              'do', 'yours', 'below', "you'd", 'until', 'with', 'i', "don't", 'her', 'or', 'other',
+              'same', 's', 'having', 'ourselves', 'and', 'before', 'any', 'your', 'our', 'ain', 'my',
+              'is', 'when', 'yourself', 'both', 'was', 'herself', 'out', 're', 'himself', 'm', 'they',
+              'won', 'theirs', 'doesn', 'you', "doesn't", 'which', 'couldn', 'so', 'y', 'how', 'whom',
+              'has', 'doing', 'me', 'wasn', 'were', 'd', 'into', 'that', 'can', "wouldn't", "it's"}
 
 
 def navbar(logo="/assets/logo-placeholder.png", height="35px",  appname="PlaceHolder Name"):
@@ -702,7 +721,8 @@ def strip_all_entities(text):
 new_stopwords = ['rt', 'en', 'la', 'el', 'amp', 'para', 'de',
                  'del', 'con', 'las', 'al', 'le', 'una', 'si',
                  'un', 'et', 'pour', 'por', 'los', 'es', 'para',
-                 'es', 'des', 'se', 'que']
+                 'es', 'des', 'se', 'que', 'su', 'mas', 'ya', 'lo',
+                 'ni', 'coronavirus', ]
 
 
 @ app.callback(Output('tfidf-graph', 'figure'),

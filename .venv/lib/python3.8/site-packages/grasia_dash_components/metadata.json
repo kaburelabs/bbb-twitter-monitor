@@ -1,0 +1,382 @@
+{
+  "src/components/Accordion.react.js": {
+    "description": "Accordion is a component to show/hide a set of components\nI takes an optional id, the label of the accordion, whether it's collapsed\nor not, plus other custom classNames.\nThe components to show/hide should be in children",
+    "displayName": "Accordion",
+    "methods": [
+      {
+        "name": "handleClick",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      }
+    ],
+    "props": {
+      "children": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "node"
+              }
+            },
+            {
+              "name": "node"
+            }
+          ]
+        },
+        "required": false,
+        "description": "The components to wrap in the accordion."
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "A header label for the accordion."
+      },
+      "defaultCollapsed": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "The initial collapsed state for the accordion."
+      },
+      "collapsed": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether the accordion is collapsed or not for a controlled component.\n  (use only if you want to control this component externally)"
+      },
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component in Dash callbacks"
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "className for this component"
+      },
+      "buttonClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "className for the 'arrow', toggle button"
+      },
+      "itemClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "className for the header of the accordion"
+      },
+      "childrenClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "className for the container of the accordion wrapped components"
+      },
+      "accordionFixedWidth": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Set a fixed width in pixels for the accordion and the children.\nIf you don't set this, the width of the accordion will vary depending on\n whether it's collapsed or not and on the width of the content."
+      },
+      "style": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Style objecto to override default style"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  },
+  "src/components/Card.react.js": {
+    "description": "Card is a component to display an image alongside some information.\nI takes an img url, a list of items of text + number or just text,\n a description and an url link.\nIt renders a component that show all that info structured and beautified.",
+    "displayName": "Card",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this compnent in Dash callbacks"
+      },
+      "img": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The img source for the card"
+      },
+      "data": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "shape",
+            "value": {
+              "label": {
+                "name": "string",
+                "description": "The item's label",
+                "required": false
+              },
+              "data": {
+                "name": "string",
+                "description": "The items's data to display (usually a number)",
+                "required": false
+              }
+            }
+          }
+        },
+        "required": false,
+        "description": "An array of data items to list"
+      },
+      "url": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "An url to link to"
+      },
+      "description": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "A description of the card content"
+      },
+      "style": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Style objecto to override default style"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  },
+  "src/components/ExampleComponent.react.js": {
+    "description": "ExampleComponent is an example component.\nIt takes a property, `label`, and\ndisplays it.\nIt renders an input with the property `value`\nwhich is editable by the user.",
+    "displayName": "ExampleComponent",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this compnent in Dash callbacks"
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "A label that will be printed when this component is rendered."
+      },
+      "value": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The value displayed in the input"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  },
+  "src/components/Import.react.js": {
+    "description": "Import serves for the only purpose to force Dash to load grasia-dash-components.\nThis is useful when you want to use grasia components that are going to be\nadded dynamically to the Dash app layout.",
+    "displayName": "Import",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component in Dash callbacks"
+      },
+      "src": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "local or external source of the javascript to import"
+      }
+    }
+  },
+  "src/components/LoadingDialog.react.js": {
+    "description": "LoadingDialog is dialog that prompts and block the user interface\nIt shows a fancy loading icon as well as some optional desctiptive text.",
+    "displayName": "LoadingDialog",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component in Dash callbacks"
+      },
+      "text": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "A descriptive text of what is being loaded"
+      },
+      "show": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Show or hide this dialog"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  },
+  "src/components/Tabs.react.js": {
+    "description": "",
+    "displayName": "Tabs",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": ""
+      },
+      "style": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Style object to be merged in with the parent level tabs"
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "ClassName for external css styling"
+      },
+      "tabsStyle": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Style object for each tab element"
+      },
+      "tabsClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "ClassName for each tab for external css styling"
+      },
+      "selectedTabStyle": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Style object for currently selected tab element"
+      },
+      "selectedTabClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "ClassName for currently selected tab only for external css styling"
+      },
+      "tabs": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "shape",
+            "value": {
+              "label": {
+                "name": "string",
+                "description": "The checkbox's label",
+                "required": false
+              },
+              "icon": {
+                "name": "string",
+                "description": "The tab's icon src",
+                "required": false
+              },
+              "value": {
+                "name": "string",
+                "description": "The value of the tab. This value\ncorresponds to the items specified in the\n`values` property.",
+                "required": false
+              }
+            }
+          }
+        },
+        "required": false,
+        "description": "An array of options"
+      },
+      "value": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The currently selected tab"
+      },
+      "vertical": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not the tabs are rendered vertically",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that gets fired when the value changes."
+      }
+    }
+  }
+}
