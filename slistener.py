@@ -216,7 +216,7 @@ class SListener(StreamListener):
         #     print(tweet)
         # else:
         #     pass
-
+        print(self.cnt)
         # uncomment the following to display tweets in the console
         if self.cnt % 1500 == 0:
             print("Writing tweet # {} to the database".format(self.cnt))

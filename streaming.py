@@ -10,11 +10,10 @@ from decouple import config
 # from key_secret import consumer_key, consumer_secret
 # from key_secret import access_token, access_token_secret
 
-api_key = 'dHdgnBwOWMZOF07zH5u4pR1NJ'
-key_secret = 'VR1k0nyst8MzNdbAaNdjrVb1XpoRXZPn0JtBcrUv96KDxxeLeR'
-access_token = '832282389598576640-4Asg7n5UNmHPSDEfdn1FGvrmvkYx2gD'
-token_secret = 'vrSZ3yiraNCrfOFJ2kkWlG13WjECS0cqFL6690k05GXg3'
-
+api_key = config('API_KEY')
+key_secret = config('KEY_SECRET')
+access_token = config('ACCESS_TOKEN')
+token_secret = config('TOKEN_SECRET')
 
 # consumer key authentication
 auth = OAuthHandler(api_key, key_secret)
@@ -27,7 +26,8 @@ listen = SListener(api)
 # instantiate the stream object
 stream = Stream(auth, listen)
 # set up words to hear
-keywords_to_hear = ['#BBB20', "#BBB2020"]
+# keywords_to_hear = ['#BBB20', "#BBB2020"]
+keywords_to_hear = ['#covid19', "#covid-19", "#covid",  "#coronavirus"]
 
 # create a engine to the database
 engine = create_engine(config('DATABASE_URL'))
