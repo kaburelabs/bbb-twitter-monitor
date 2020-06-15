@@ -2,5 +2,6 @@ venv
 *.pyc
 .DS_Store
 .env
+.venv
 pythonDB.db
 historical.sqlite
