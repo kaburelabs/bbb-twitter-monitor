@@ -84,6 +84,10 @@ app.index_string = """<!DOCTYPE html>
 app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 
+# stop words
+nltk.download('stopwords')
+stop_words = set(stopwords.words("english"))
+
 
 def navbar(logo="/assets/logo-placeholder.png", height="35px",  appname="PlaceHolder Name"):
 
@@ -695,10 +699,10 @@ def strip_all_entities(text):
     return ' '.join(words)
 
 
-stop_words = set(stopwords.words("english"))
-new_stopwords = ['rt', 'en', 'la', 'el', 'amp', 'para', 'de', 'del', 'con', 'las', 'al',
-                 'le', 'una', 'si', 'un', 'et', 'pour',
-                 'por', 'los', 'es', 'para', 'es', 'des', 'se', 'que']
+new_stopwords = ['rt', 'en', 'la', 'el', 'amp', 'para', 'de',
+                 'del', 'con', 'las', 'al', 'le', 'una', 'si',
+                 'un', 'et', 'pour', 'por', 'los', 'es', 'para',
+                 'es', 'des', 'se', 'que']
 
 
 @ app.callback(Output('tfidf-graph', 'figure'),
