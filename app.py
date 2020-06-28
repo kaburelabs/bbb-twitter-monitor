@@ -74,6 +74,7 @@ app.index_string = """<!DOCTYPE html>
         {%favicon%}
         {%css%}
         <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5e8113b5c213f90019450492&product=inline-share-buttons&cms=website' async='async'></script>
+        <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </head>
     <body>
         {%app_entry%}
@@ -85,7 +86,7 @@ app.index_string = """<!DOCTYPE html>
     </body>
 </html>"""
 
-# <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 
@@ -575,7 +576,10 @@ def resume_tweets(df, type='share'):
         # print(link)
         list_twt.append(html.Div([html.Div(f"{text}", style={'textAlign': 'center', 'fontWeight': 'bold', "direction": "ltr",
                                                              'fontSize': '18px'}),
-                                  html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width': "498px"})],
+                                  html.Blockquote(
+                                      html.A(href=link), className="twitter-tweet", style={'width': "498px"}),
+                                  visdcc.Run_js(id="javascript2",
+                                                run="twttr.widgets.load()")],
                                  style={"margin": "48px 0"}))
 
     list_twt.append(visdcc.Run_js(id="javascript",
