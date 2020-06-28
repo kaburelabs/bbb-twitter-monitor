@@ -137,22 +137,22 @@ def create_footer():
         children=[
             html.Span('Developed By: '),
             html.A('trich.ai | Data Intelligence Solutions',
-                   style={'text-decoration': 'none', 'color': '#ffffff'},
+                   style={'textDecoration': 'none', 'color': '#ffffff'},
                    href='https://trich.ai', target='_blank')
-        ], style={'float': 'right', 'margin-top': '8px',
-                  'font-size': '18px', 'color': '#ffffff'}
+        ], style={'float': 'right', 'marginTop': '8px',
+                  'fontSize': '18px', 'color': '#ffffff'}
     )
 
-    span_style = {'horizontal-align': 'right',
-                  'padding-left': '1rem',
-                  'font-size': '15px',
-                  'vertical-align': 'middle'}
+    span_style = {'horizontalAlign': 'right',
+                  'paddingLeft': '1rem',
+                  'fontSize': '15px',
+                  'verticalAlign': 'middle'}
 
     kaggle = html.A(
         children=[
             html.I([], className='fab fa-kaggle'),
             html.Span('Kaggle', style=span_style)
-        ], style={'text-decoration': 'none', 'color': '#ffffff', 'margin-right': '20px'},
+        ], style={'textDecoration': 'none', 'color': '#ffffff', 'marginRight': '20px'},
         href="https://www.kaggle.com/kabure/kernels",
         target='_blank')
 
@@ -160,21 +160,21 @@ def create_footer():
         children=[
             html.I([], className='fab fa-python'),
             html.Span('Dash Plotly', style=span_style)
-        ], style={'text-decoration': 'none', 'color': '#ffffff', 'margin-right': '20px'},
+        ], style={'textDecoration': 'none', 'color': '#ffffff', 'marginRight': '20px'},
         href='https://plot.ly/dash/', target='_blank')
 
     font_awesome = html.A(
         children=[
             html.I([], className='fa fa-font-awesome'),
             html.Span('Font Awesome', style=span_style)
-        ], style={'text-decoration': 'none', 'color': '#ffffff', 'margin-right': '20px'},
+        ], style={'textDecoration': 'none', 'color': '#ffffff', 'marginRight': '20px'},
         href='http://fontawesome.io/', target='_blank')
 
     datatables = html.A(
         children=[
             html.I([], className='fa fa-github'),
             html.Span('trich.ai\n Github', style=span_style)
-        ], style={'text-decoration': 'none', 'color': '#ffffff', 'margin-right': '20px'},
+        ], style={'textDecoration': 'none', 'color': '#ffffff', 'marginRight': '20px'},
         href='https://github.com/kaburelabs/', target='_blank')
 
     ul1 = html.Div(
@@ -188,7 +188,7 @@ def create_footer():
             html.Li(kaggle, style={
                     'display': 'inline-block', 'color': '#ffffff'}),
         ],
-        style={'list-style-type': 'none', 'font-size': '30px'},
+        style={'listStyleType': 'none', 'fontSize': '30px'},
     )
 
     hashtags = 'plotly,dash,trich.ai,bbb20,data, streaming'
@@ -199,7 +199,7 @@ def create_footer():
         children=html.I(children=[], className='fa fa-twitter'),
         title='Tweet me!', href=twitter_href, target='_blank')
 
-    li_right_first = {'line-style-type': 'none', 'display': 'inline-block'}
+    li_right_first = {'lineStyletype': 'none', 'display': 'inline-block'}
     li_right_others = {k: v for k, v in li_right_first.items()}
     li_right_others.update({'margin-left': '10px'})
     ul2 = html.Ul(
@@ -211,16 +211,16 @@ def create_footer():
             'position': 'fixed',
             'right': '1.5rem',
             'bottom': '75px',
-            'font-size': '60px'
+            'fontSize': '60px'
         }
     )
     div = html.Div([p, ul1, ul2])
 
     footer_style = {
-        'font-size': '2.2rem',
-        'background-color': '#3C4240',
+        'fontSize': '2.2rem',
+        'backgroundColor': '#3C4240',
         # 'padding': '2.5rem',
-        'margin-top': '5rem',
+        'marginTop': '5rem',
         'display': 'inline-block', 'padding': '16px 32px 8px'
     }
     footer = html.Footer(div, style=footer_style, className='twelve columns')
@@ -361,7 +361,7 @@ app.layout = html.Div([
                             html.Div('MOST IMPORTANT MENTIONS',
                                      className="font-xs")
 
-                        ], style={'text-decoration': 'none'}, className='text-center margin-auto'),
+                        ], style={'textDecoration': 'none'}, className='text-center margin-auto'),
                         dcc.Graph(id='graph-2')
                     ], width=4),
 
@@ -373,7 +373,7 @@ app.layout = html.Div([
                                 ' HASHTAGS', className="font-lg bold", style={'font': 'sans-serif'}),
                             html.Div("MOST IMPORTANT HASHTAGS",
                                      className="font-xs")
-                        ], style={'text-decoration': 'none'}, className='text-center margin-auto'),
+                        ], style={'textDecoration': 'none'}, className='text-center margin-auto'),
                         dcc.Graph(id='graph-3')
                     ], width=4),
 
@@ -385,7 +385,7 @@ app.layout = html.Div([
                             html.Span(
                                 ' USERS', className="font-lg bold", style={'font': 'sans-serif'}),
                             html.Div("MOST ACTIVE USERS", className="font-xs")
-                        ], style={'text-decoration': 'none'}, className='text-center margin-auto'),
+                        ], style={'textDecoration': 'none'}, className='text-center margin-auto'),
                         dcc.Graph(id='graph-4')
                     ], width=4)
 
@@ -483,7 +483,7 @@ def _update_div1(df):
                         html.Div([
                             html.I([], className='far fa-comment-dots'),
                             # html.Span(' Total tweets', style={'fontSize':'21px', 'font': 'sans-serif', 'fontWeight':'bold'})
-                        ], style={'text-decoration': 'none'}, className="font-xl text-center bold"),
+                        ], style={'textDecoration': 'none'}, className="font-xl text-center bold"),
 
                         html.Div(id='display-6',
                                  children=[html.Div(total_tweets)], className="font-lg text-center bold"
@@ -496,7 +496,7 @@ def _update_div1(df):
                             html.Div([
                                 html.I([], className='far fa-user'),
                                 # html.Span(' Total tweets', style={'fontSize':'21px', 'font': 'sans-serif', 'fontWeight':'bold'})
-                            ], style={'text-decoration': 'none'}, className="font-xl text-center bold"),
+                            ], style={'textDecoration': 'none'}, className="font-xl text-center bold"),
                             html.Div(id='display-8',
                                      children=[html.Div(unique_users)], className="font-lg text-center bold"),
                             # <i class="fas fa-users"></i>
@@ -510,7 +510,7 @@ def _update_div1(df):
                     html.Div([
                         html.I([], className='fas fa-retweet'),
                         # html.Span(' Total tweets', style={'fontSize':'21px', 'font': 'sans-serif', 'fontWeight':'bold'})
-                    ], style={'text-decoration': 'none'}, className="font-xl text-center bold"),
+                    ], style={'textDecoration': 'none'}, className="font-xl text-center bold"),
                     html.Div(id='display-7',
                              children=[html.Div(f"{unique_texts_perc}%")], className="font-lg text-center bold"),
                     # <i class="fas fa-retweet"></i>
@@ -522,7 +522,7 @@ def _update_div1(df):
                     html.Div([
                         html.I([], className='fas fa-paragraph'),
                         # html.Span(' Total tweets', style={'fontSize':'21px', 'font': 'sans-serif', 'fontWeight':'bold'})
-                    ], style={'text-decoration': 'none'}, className="font-xl text-center bold"),
+                    ], style={'textDecoration': 'none'}, className="font-xl text-center bold"),
                     html.Div(id='display-5',
                              children=[html.Div(f"{zero_retweets_perc}%")], className="font-lg text-center bold"),
                     # html.Div(f"({zero_retweets})", style={'textAlign':'center'}),
@@ -534,7 +534,7 @@ def _update_div1(df):
                     html.Div([
                         html.I([], className='fas fa-fire-alt'),
                         # html.Span(' Total tweets', style={'fontSize':'21px', 'font': 'sans-serif', 'fontWeight':'bold'})
-                    ], style={'text-decoration': 'none'}, className="font-xl text-center bold"),
+                    ], style={'textDecoration': 'none'}, className="font-xl text-center bold"),
                     html.Div(id='display-9',
                              children=[html.Div(f"{top_20_posts_perc}%")], className="font-lg text-center bold"),
                     # html.Div(f"({top_20_posts_perc}%)", style={'textAlign':'center'}),
@@ -572,12 +572,14 @@ def resume_tweets(df, type='share'):
             text = f"#{i+1} Most Shared - Total Shares: {df['count'].to_list()[i]} "
         else:
             text = f"#{i+1} Most Retweeted - Total Shares: {df['count'].to_list()[i]}"
+        # print(link)
         list_twt.append(html.Div([html.Div(f"{text}", style={'textAlign': 'center', 'fontWeight': 'bold', "direction": "ltr",
                                                              'fontSize': '18px'}),
                                   html.Blockquote(html.A(href=link), className="twitter-tweet", style={'width': "498px"})],
                                  style={"margin": "48px 0"}))
 
-    list_twt.append(visdcc.Run_js(id="javascript", run="twttr.widgets.load()"))
+    list_twt.append(visdcc.Run_js(id="javascript",
+                                  run="twttr.widgets.load()"))
 
     return list_twt
 
@@ -587,11 +589,6 @@ def resume_tweets(df, type='share'):
                [Input('df-sharing', 'children'),
                 Input('graph-update', 'n_intervals')])
 def _update_div1(df, n_val):
-
-    # if ((n_val % 6 != 0 ) and (n_val >= 16)):
-    #     raise PreventUpdate
-    # else:
-    #     pass
 
     df_ = pd.read_json(df, orient='split')
     # time.sleep(30)

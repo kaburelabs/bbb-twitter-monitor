@@ -220,6 +220,10 @@ a:hover {
     text-align: center;
 }
 
+.row-center{
+    justify-content: center;
+}
+
 .text-right {
     text-align: right;
 }
